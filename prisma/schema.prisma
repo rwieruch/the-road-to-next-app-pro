@@ -1,0 +1,63 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id           String    @id @default(cuid())
+  username     String    @unique
+  email        String    @unique
+  passwordHash String
+  sessions     Session[]
+  tickets      Ticket[]
+  comments     Comment[]
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  userId    String
+  user      User     @relation(references: [id], fields: [userId], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Ticket {
+  id        String       @id @default(cuid())
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  title     String
+  content   String       @db.VarChar(1024)
+  status    TicketStatus @default(OPEN)
+  deadline  String
+  bounty    Int
+  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  comments  Comment[]
+
+  @@index([userId])
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  content   String   @db.VarChar(1024)
+  ticket    Ticket   @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  ticketId  String
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId    String?
+
+  @@index([ticketId])
+  @@index([userId])
+}
+
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  DONE
+}
