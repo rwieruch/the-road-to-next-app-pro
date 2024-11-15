@@ -14,8 +14,12 @@ const EmailVerificationPage = async () => {
         title="Verify Email"
         description="Please verify your email to continue"
         className="w-full max-w-[420px] animate-fade-from-top"
-        content={<EmailVerificationForm />}
-        footer={<EmailVerificationResendForm />}
+        content={
+          <div className="flex flex-col gap-y-2">
+            <EmailVerificationForm />
+            <EmailVerificationResendForm />
+          </div>
+        }
       />
     </div>
   );
