@@ -10,11 +10,10 @@ import {
   fromErrorToActionState,
   toActionState,
 } from "@/components/form/utils/to-action-state";
+import { inngest } from "@/lib/inngest";
 import { lucia } from "@/lib/lucia";
 import { prisma } from "@/lib/prisma";
 import { ticketsPath } from "@/paths";
-import { sendEmailVerification } from "../emails/send-email-verification";
-import { generateEmailVerificationCode } from "../utils/generate-email-verification-code";
 
 const signUpSchema = z
   .object({
@@ -56,11 +55,12 @@ export const signUp = async (_actionState: ActionState, formData: FormData) => {
       },
     });
 
-    const verificationCode = await generateEmailVerificationCode(
-      user.id,
-      email
-    );
-    await sendEmailVerification(username, email, verificationCode);
+    await inngest.send({
+      name: "app/auth.sign-up",
+      data: {
+        userId: user.id,
+      },
+    });
 
     const session = await lucia.createSession(user.id, {});
     const sessionCookie = lucia.createSessionCookie(session.id);
