@@ -13,6 +13,7 @@ import {
 import { lucia } from "@/lib/lucia";
 import { prisma } from "@/lib/prisma";
 import { ticketsPath } from "@/paths";
+import { generateEmailVerificationCode } from "../utils/generate-email-verification-code";
 
 const signUpSchema = z
   .object({
@@ -53,6 +54,12 @@ export const signUp = async (_actionState: ActionState, formData: FormData) => {
         passwordHash,
       },
     });
+
+    const verificationCode = await generateEmailVerificationCode(
+      user.id,
+      email
+    );
+    console.log(verificationCode);
 
     const session = await lucia.createSession(user.id, {});
     const sessionCookie = lucia.createSessionCookie(session.id);
