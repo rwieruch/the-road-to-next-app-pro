@@ -18,6 +18,11 @@ export const getOrganizationsByUser = async () => {
           userId: user.id,
         },
       },
+      _count: {
+        select: {
+          memberships: true,
+        },
+      },
     },
   });
 

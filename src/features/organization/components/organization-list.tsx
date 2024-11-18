@@ -16,6 +16,7 @@ const OrganizationList = async () => {
               "yyyy-MM-dd, HH:mm"
             )}
           </div>
+          <div>Members: {organization._count.memberships}</div>
         </div>
       ))}
     </div>
