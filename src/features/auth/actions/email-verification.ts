@@ -25,6 +25,7 @@ export const emailVerification = async (
 ) => {
   const { user } = await getAuthOrRedirect({
     checkEmailVerified: false,
+    checkOrganization: false,
   });
 
   try {
