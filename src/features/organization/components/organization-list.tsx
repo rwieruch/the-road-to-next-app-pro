@@ -14,9 +14,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { getAuth } from "@/features/auth/queries/get-auth";
 import { getOrganizationsByUser } from "../queries/get-organizations-by-user";
+import { OrganizationSwitchButton } from "./organization-switch-button";
 
 const OrganizationList = async () => {
+  const { user } = await getAuth();
   const organizations = await getOrganizationsByUser();
 
   return (
@@ -32,10 +35,25 @@ const OrganizationList = async () => {
       </TableHeader>
       <TableBody>
         {organizations.map((organization) => {
+          const hasActive = !!user?.activeOrganizationId;
+
+          const isActive =
+            hasActive && user.activeOrganizationId === organization.id;
+
           const switchButton = (
-            <Button variant="outline" size="icon">
-              <LucideArrowLeftRight className="w-4 h-4" />
-            </Button>
+            <OrganizationSwitchButton
+              organizationId={organization.id}
+              trigger={
+                <Button
+                  variant={
+                    !hasActive ? "secondary" : isActive ? "default" : "outline"
+                  }
+                >
+                  <LucideArrowLeftRight className="w-4 h-4" />
+                  {!hasActive ? "Activate" : isActive ? "Active" : "Switch"}
+                </Button>
+              }
+            />
           );
 
           const detailButton = (

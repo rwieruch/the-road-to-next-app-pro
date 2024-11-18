@@ -14,6 +14,7 @@ model Organization {
   updatedAt   DateTime     @updatedAt
   name        String
   memberships Membership[]
+  activeUsers User[]
 }
 
 model Membership {
@@ -41,6 +42,10 @@ model User {
   tickets                 Ticket[]
   comments                Comment[]
   memberships             Membership[]
+  activeOrganization      Organization?            @relation(fields: [activeOrganizationId], references: [id], onDelete: SetNull)
+  activeOrganizationId    String?
+
+  @@index([activeOrganizationId])
 }
 
 model Session {
