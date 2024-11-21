@@ -17,6 +17,7 @@ import {
 import { getAuth } from "@/features/auth/queries/get-auth";
 import { getOrganizationsByUser } from "../queries/get-organizations-by-user";
 import { OrganizationSwitchButton } from "./organization-switch-button";
+import { SubmitButton } from "@/components/form/submit-button";
 
 const OrganizationList = async () => {
   const { user } = await getAuth();
@@ -44,14 +45,15 @@ const OrganizationList = async () => {
             <OrganizationSwitchButton
               organizationId={organization.id}
               trigger={
-                <Button
+                <SubmitButton
+                  icon={<LucideArrowLeftRight />}
+                  label={
+                    !hasActive ? "Activate" : isActive ? "Active" : "Switch"
+                  }
                   variant={
                     !hasActive ? "secondary" : isActive ? "default" : "outline"
                   }
-                >
-                  <LucideArrowLeftRight className="w-4 h-4" />
-                  {!hasActive ? "Activate" : isActive ? "Active" : "Switch"}
-                </Button>
+                />
               }
             />
           );
