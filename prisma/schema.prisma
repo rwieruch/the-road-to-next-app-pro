@@ -8,70 +8,19 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-model Organization {
-  id          String       @id @default(cuid())
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-  name        String
-  memberships Membership[]
-  activeUsers User[]
-}
-
-model Membership {
-  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  organizationId String
-  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId         String
-
-  joinedAt DateTime @default(now())
-
-  @@id([organizationId, userId])
-  @@index([organizationId])
-  @@index([userId])
-}
-
 model User {
-  id                      String                   @id @default(cuid())
-  username                String                   @unique
-  email                   String                   @unique
-  emailVerified           Boolean                  @default(false)
-  passwordHash            String
-  sessions                Session[]
-  passwordResetTokens     PasswordResetToken[]
-  emailVerificationTokens EmailVerificationToken[]
-  tickets                 Ticket[]
-  comments                Comment[]
-  memberships             Membership[]
-  activeOrganization      Organization?            @relation(fields: [activeOrganizationId], references: [id], onDelete: SetNull)
-  activeOrganizationId    String?
-
-  @@index([activeOrganizationId])
+  id           String    @id @default(cuid())
+  username     String    @unique
+  email        String    @unique
+  passwordHash String
+  sessions     Session[]
+  tickets      Ticket[]
+  comments     Comment[]
 }
 
 model Session {
   id        String   @id
   expiresAt DateTime
-  userId    String
-  user      User     @relation(references: [id], fields: [userId], onDelete: Cascade)
-
-  @@index([userId])
-}
-
-model PasswordResetToken {
-  tokenHash String   @unique
-  expiresAt DateTime
-  userId    String
-  user      User     @relation(references: [id], fields: [userId], onDelete: Cascade)
-
-  @@index([userId])
-}
-
-model EmailVerificationToken {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  code      String
-  expiresAt DateTime
-  email     String
   userId    String
   user      User     @relation(references: [id], fields: [userId], onDelete: Cascade)
 
