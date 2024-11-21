@@ -1,0 +1,57 @@
+"use server";
+
+import { redirect } from "next/navigation";
+import { z } from "zod";
+import { setCookieByKey } from "@/actions/cookies";
+import {
+  ActionState,
+  fromErrorToActionState,
+} from "@/components/form/utils/to-action-state";
+import { getAuthOrRedirect } from "@/features/auth/queries/get-auth-or-redirect";
+import { prisma } from "@/lib/prisma";
+import { ticketsPath } from "@/paths";
+
+const createOrganizationSchema = z.object({
+  name: z.string().min(1).max(191),
+});
+
+export const createOrganization = async (
+  _actionState: ActionState,
+  formData: FormData
+) => {
+  const { user } = await getAuthOrRedirect({
+    checkOrganization: false,
+    checkActiveOrganization: false,
+  });
+
+  try {
+    const data = createOrganizationSchema.parse({
+      name: formData.get("name"),
+    });
+
+    const organization = await prisma.organization.create({
+      data: {
+        ...data,
+        memberships: {
+          create: {
+            userId: user.id,
+          },
+        },
+      },
+    });
+
+    await prisma.user.update({
+      data: {
+        activeOrganizationId: organization.id,
+      },
+      where: {
+        id: user.id,
+      },
+    });
+  } catch (error) {
+    return fromErrorToActionState(error);
+  }
+
+  await setCookieByKey("toast", "Organization created");
+  redirect(ticketsPath());
+};
