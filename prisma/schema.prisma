@@ -12,6 +12,7 @@ model User {
   id                  String               @id @default(cuid())
   username            String               @unique
   email               String               @unique
+  emailVerified       Boolean              @default(false)
   passwordHash        String
   sessions            Session[]
   passwordResetTokens PasswordResetToken[]
