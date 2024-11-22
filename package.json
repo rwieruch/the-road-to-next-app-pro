@@ -10,7 +10,8 @@
     "lint-fix": "next lint --fix",
     "type": "tsc --noEmit",
     "postinstall": "prisma generate",
-    "prisma-seed": "tsx prisma/seed.ts"
+    "prisma-seed": "tsx prisma/seed.ts",
+    "email": "email dev --dir src/emails"
   },
   "dependencies": {
     "@node-rs/argon2": "^2.0.0",
