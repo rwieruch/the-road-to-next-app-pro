@@ -27,6 +27,10 @@ export const passwordResetEvent = inngest.createFunction(
       passwordResetLink
     );
 
+    if (result.error) {
+      throw new Error(`${result.error.name}: ${result.error.message}`);
+    }
+
     return { event, body: result };
   }
 );
