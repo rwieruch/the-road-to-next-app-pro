@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
-import { emailVerificationPath, signInPath } from "@/paths";
+import { getOrganizationsByUser } from "@/features/organization/queries/get-organizations-by-user";
+import { emailVerificationPath, onboardingPath, signInPath } from "@/paths";
 import { getAuth } from "./get-auth";
 
 type GetAuthOrRedirectOptions = {
@@ -17,6 +18,12 @@ export const getAuthOrRedirect = async (options?: GetAuthOrRedirectOptions) => {
 
   if (checkEmailVerified && !auth.user.emailVerified) {
     redirect(emailVerificationPath());
+  }
+
+  const organizations = await getOrganizationsByUser();
+
+  if (!organizations.length) {
+    redirect(onboardingPath());
   }
 
   return auth;

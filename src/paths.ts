@@ -8,6 +8,8 @@ export const passwordResetPath = () => "/password-reset";
 
 export const emailVerificationPath = () => "/email-verification";
 
+export const onboardingPath = () => "/onboarding";
+
 export const organizationsPath = () => "/organization";
 
 export const accountProfilePath = () => "/account/profile";
