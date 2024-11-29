@@ -34,6 +34,7 @@ export const createOrganization = async (
         memberships: {
           create: {
             userId: user.id,
+            isActive: true,
           },
         },
       },
