@@ -5,6 +5,7 @@ import {
   LucidePen,
   LucideTrash,
 } from "lucide-react";
+import { SubmitButton } from "@/components/form/submit-button";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -15,9 +16,14 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { getOrganizationsByUser } from "../queries/get-organizations-by-user";
+import { OrganizationSwitchButton } from "./organization-switch-button";
 
 const OrganizationList = async () => {
   const organizations = await getOrganizationsByUser();
+
+  const hasActive = organizations.some((organization) => {
+    return organization.membershipByUser.isActive;
+  });
 
   return (
     <Table>
@@ -32,10 +38,23 @@ const OrganizationList = async () => {
       </TableHeader>
       <TableBody>
         {organizations.map((organization) => {
+          const isActive = organization.membershipByUser.isActive;
+
           const switchButton = (
-            <Button variant="outline" size="icon">
-              <LucideArrowLeftRight className="w-4 h-4" />
-            </Button>
+            <OrganizationSwitchButton
+              organizationId={organization.id}
+              trigger={
+                <SubmitButton
+                  icon={<LucideArrowLeftRight />}
+                  label={
+                    !hasActive ? "Activate" : isActive ? "Active" : "Switch"
+                  }
+                  variant={
+                    !hasActive ? "secondary" : isActive ? "default" : "outline"
+                  }
+                />
+              }
+            />
           );
 
           const detailButton = (
