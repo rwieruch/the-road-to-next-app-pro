@@ -15,6 +15,9 @@ export const selectActiveOrganizationPath = () =>
 export const organizationsPath = () => "/organization";
 export const organizationCreatePath = () => "/organization/create";
 
+export const membershipsPath = (organizationId: string) =>
+  `/organization/${organizationId}/memberships`;
+
 export const accountProfilePath = () => "/account/profile";
 export const accountPasswordPath = () => "/account/password";
 
