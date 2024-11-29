@@ -21,11 +21,21 @@ export const createOrganization = async (
 ) => {
   const { user } = await getAuthOrRedirect({
     checkOrganization: false,
+    checkActiveOrganization: false,
   });
 
   try {
     const data = createOrganizationSchema.parse({
       name: formData.get("name"),
+    });
+
+    await prisma.membership.updateMany({
+      where: {
+        userId: user.id,
+      },
+      data: {
+        isActive: false,
+      },
     });
 
     await prisma.organization.create({
@@ -34,7 +44,7 @@ export const createOrganization = async (
         memberships: {
           create: {
             userId: user.id,
-            isActive: false,
+            isActive: true,
           },
         },
       },

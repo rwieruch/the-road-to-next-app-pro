@@ -11,7 +11,9 @@ import { organizationsPath } from "@/paths";
 import { getOrganizationsByUser } from "../queries/get-organizations-by-user";
 
 export const switchOrganization = async (organizationId: string) => {
-  const { user } = await getAuthOrRedirect();
+  const { user } = await getAuthOrRedirect({
+    checkActiveOrganization: false,
+  });
 
   try {
     const organizations = await getOrganizationsByUser();

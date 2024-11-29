@@ -9,6 +9,8 @@ export const passwordResetPath = () => "/password-reset";
 export const emailVerificationPath = () => "/email-verification";
 
 export const onboardingPath = () => "/onboarding";
+export const selectActiveOrganizationPath = () =>
+  "/onboarding/select-active-organization";
 
 export const organizationsPath = () => "/organization";
 export const organizationCreatePath = () => "/organization/create";
