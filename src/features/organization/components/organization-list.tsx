@@ -3,7 +3,6 @@ import {
   LucideArrowLeftRight,
   LucideArrowUpRightFromSquare,
   LucidePen,
-  LucideTrash,
 } from "lucide-react";
 import { SubmitButton } from "@/components/form/submit-button";
 import { Button } from "@/components/ui/button";
@@ -16,6 +15,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { getOrganizationsByUser } from "../queries/get-organizations-by-user";
+import { OrganizationDeleteButton } from "./organization-delete-button";
 import { OrganizationSwitchButton } from "./organization-switch-button";
 
 const OrganizationList = async () => {
@@ -70,9 +70,7 @@ const OrganizationList = async () => {
           );
 
           const deleteButton = (
-            <Button variant="destructive" size="icon">
-              <LucideTrash className="w-4 h-4" />
-            </Button>
+            <OrganizationDeleteButton organizationId={organization.id} />
           );
 
           const buttons = (
