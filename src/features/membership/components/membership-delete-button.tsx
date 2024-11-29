@@ -1,6 +1,6 @@
 "use client";
 
-import { LucideLoaderCircle, LucideTrash } from "lucide-react";
+import { LucideLoaderCircle, LucideLogOut } from "lucide-react";
 import { useConfirmDialog } from "@/components/confirm-dialog";
 import { Button } from "@/components/ui/button";
 import { deleteMembership } from "../actions/delete-membership";
@@ -26,7 +26,7 @@ const MembershipDeleteButton = ({
         </Button>
       ) : (
         <Button variant="destructive" size="icon">
-          <LucideTrash className="w-4 h-4" />
+          <LucideLogOut className="w-4 h-4" />
         </Button>
       ),
   });
