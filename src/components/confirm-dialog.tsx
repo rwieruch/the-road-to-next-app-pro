@@ -23,7 +23,7 @@ import { Button } from "./ui/button";
 type UseConfirmDialogArgs = {
   title?: string;
   description?: string;
-  action: () => Promise<ActionState>;
+  action: () => Promise<ActionState | undefined>;
   trigger: React.ReactElement | ((isLoading: boolean) => React.ReactElement);
   onSuccess?: (actionState: ActionState) => void;
 };
