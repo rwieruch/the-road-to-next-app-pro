@@ -5,13 +5,13 @@ import {
   fromErrorToActionState,
   toActionState,
 } from "@/components/form/utils/to-action-state";
-import { getAuthOrRedirect } from "@/features/auth/queries/get-auth-or-redirect";
+import { getAdminOrRedirect } from "@/features/membership/queries/get-admin-or-redirect";
 import { prisma } from "@/lib/prisma";
 import { organizationsPath } from "@/paths";
 import { getOrganizationsByUser } from "../queries/get-organizations-by-user";
 
 export const deleteOrganization = async (organizationId: string) => {
-  await getAuthOrRedirect();
+  await getAdminOrRedirect(organizationId);
 
   try {
     const organizations = await getOrganizationsByUser();
