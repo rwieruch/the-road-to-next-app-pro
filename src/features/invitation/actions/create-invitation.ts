@@ -44,11 +44,8 @@ export const createInvitation = async (
       );
     }
 
-    const emailInvitationLink = await generateInvitationLink(
-      user.id,
-      organizationId,
-      email
-    );
+    const { link: emailInvitationLink, email: invitedEmail } =
+      await generateInvitationLink(user.id, organizationId, email);
 
     // TODO: Send email with invitation link
     // instead we will just print it to the console for now
