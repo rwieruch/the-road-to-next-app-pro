@@ -14,6 +14,18 @@ model Organization {
   updatedAt   DateTime     @updatedAt
   name        String
   memberships Membership[]
+  invitations Invitation[]
+}
+
+model Invitation {
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  tokenHash      String       @unique
+  email          String       @unique
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId String
+
+  @@index([organizationId])
 }
 
 model Membership {
