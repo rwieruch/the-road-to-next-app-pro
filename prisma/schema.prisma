@@ -18,12 +18,14 @@ model Organization {
 }
 
 model Invitation {
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
-  tokenHash      String       @unique
-  email          String       @unique
-  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  organizationId String
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  tokenHash       String       @unique
+  email           String       @unique
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId  String
+  invitedByUser   User?        @relation(fields: [invitedByUserId], references: [id], onDelete: SetNull)
+  invitedByUserId String?
 
   @@index([organizationId])
 }
@@ -57,6 +59,7 @@ model User {
   sessions                Session[]
   passwordResetTokens     PasswordResetToken[]
   emailVerificationTokens EmailVerificationToken[]
+  invitesByUser           Invitation[]
   memberships             Membership[]
   tickets                 Ticket[]
   comments                Comment[]
