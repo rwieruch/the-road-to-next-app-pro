@@ -29,5 +29,5 @@ export const generateInvitationLink = async (
   const pageUrl = getBaseUrl() + emailInvitationPath();
   const emailInvitationLink = pageUrl + `/${tokenId}`;
 
-  return { link: emailInvitationLink, email };
+  return emailInvitationLink;
 };
