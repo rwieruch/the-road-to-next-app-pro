@@ -48,7 +48,7 @@ model Membership {
   membershipRole MembershipRole @default(MEMBER)
 
   // permissions
-  canDeleteTicket Boolean @default(false)
+  canDeleteTicket Boolean @default(true)
 
   @@id(name: "membershipId", [organizationId, userId])
   @@index([organizationId])
