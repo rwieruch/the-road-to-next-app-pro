@@ -11,9 +11,23 @@ import { getAuthOrRedirect } from "@/features/auth/queries/get-auth-or-redirect"
 import { isOwner } from "@/features/auth/utils/is-owner";
 import { prisma } from "@/lib/prisma";
 import { ticketPath } from "@/paths";
+import { ACCEPTED, MAX_SIZE } from "../constants";
+import { sizeInMB } from "../utils/size";
 
 const createAttachmentsSchema = z.object({
-  files: z.custom<FileList>().transform((files) => Array.from(files)),
+  files: z
+    .custom<FileList>()
+    .transform((files) => Array.from(files))
+    .transform((files) => files.filter((file) => file.size > 0))
+    .refine(
+      (files) => files.every((file) => sizeInMB(file.size) <= MAX_SIZE),
+      `The maximum file size is ${MAX_SIZE}MB`
+    )
+    .refine(
+      (files) => files.every((file) => ACCEPTED.includes(file.type)),
+      "File type is not supported"
+    )
+    .refine((files) => files.length !== 0, "File is required"),
 });
 
 export const createAttachments = async (
