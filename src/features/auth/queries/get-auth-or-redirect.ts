@@ -31,6 +31,8 @@ export const getAuthOrRedirect = async (options?: GetAuthOrRedirectOptions) => {
     redirect(emailVerificationPath());
   }
 
+  let activeOrganization;
+
   if (checkOrganization || checkActiveOrganization) {
     const organizations = await getOrganizationsByUser();
 
@@ -38,14 +40,16 @@ export const getAuthOrRedirect = async (options?: GetAuthOrRedirectOptions) => {
       redirect(onboardingPath());
     }
 
-    const hasActive = organizations.some((organization) => {
+    activeOrganization = organizations.find((organization) => {
       return organization.membershipByUser.isActive;
     });
+
+    const hasActive = !!activeOrganization;
 
     if (checkActiveOrganization && !hasActive) {
       redirect(selectActiveOrganizationPath());
     }
   }
 
-  return auth;
+  return { ...auth, activeOrganization };
 };
