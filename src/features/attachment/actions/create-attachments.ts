@@ -54,6 +54,8 @@ export const createAttachments = async (
     return toActionState("ERROR", "Not the owner of this ticket");
   }
 
+  let attachment;
+
   try {
     const { files } = createAttachmentsSchema.parse({
       files: formData.getAll("files"),
@@ -62,7 +64,7 @@ export const createAttachments = async (
     for (const file of files) {
       const buffer = await Buffer.from(await file.arrayBuffer());
 
-      const attachment = await prisma.attachment.create({
+      attachment = await prisma.attachment.create({
         data: {
           name: file.name,
           ticketId: ticket.id,
@@ -84,6 +86,15 @@ export const createAttachments = async (
       );
     }
   } catch (error) {
+    // fallback if S3 upload fails, but attachment was created
+    if (attachment) {
+      await prisma.attachment.delete({
+        where: {
+          id: attachment.id,
+        },
+      });
+    }
+
     return fromErrorToActionState(error);
   }
 
