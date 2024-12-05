@@ -17,6 +17,7 @@ import { ticketPath } from "@/paths";
 import { ACCEPTED, MAX_SIZE } from "../constants";
 import { isComment, isTicket } from "../types";
 import { generateS3Key } from "../utils/generate-s3-key";
+import { getOrganizationIdByAttachment } from "../utils/helpers";
 import { sizeInMB } from "../utils/size";
 
 const createAttachmentsSchema = z.object({
@@ -100,21 +101,7 @@ export const createAttachments = async (
         },
       });
 
-      let organizationId = "";
-      switch (entity) {
-        case "TICKET": {
-          if (isTicket(subject)) {
-            organizationId = subject.organizationId;
-          }
-          break;
-        }
-        case "COMMENT": {
-          if (isComment(subject)) {
-            organizationId = subject.ticket.organizationId;
-          }
-          break;
-        }
-      }
+      const organizationId = getOrganizationIdByAttachment(entity, subject);
 
       await s3.send(
         new PutObjectCommand({
