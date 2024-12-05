@@ -7,6 +7,7 @@ import {
 } from "@/components/form/utils/to-action-state";
 import { getAuthOrRedirect } from "@/features/auth/queries/get-auth-or-redirect";
 import { isOwner } from "@/features/auth/utils/is-owner";
+import { inngest } from "@/lib/inngest";
 import { prisma } from "@/lib/prisma";
 import { ticketPath } from "@/paths";
 
@@ -30,6 +31,13 @@ export const deleteAttachment = async (id: string) => {
     await prisma.attachment.delete({
       where: {
         id,
+      },
+    });
+
+    await inngest.send({
+      name: "app/attachment.deleted",
+      data: {
+        attachmentId: id,
       },
     });
   } catch (error) {
