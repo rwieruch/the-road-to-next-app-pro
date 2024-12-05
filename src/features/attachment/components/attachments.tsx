@@ -17,7 +17,7 @@ const Attachments = async ({ ticketId, isOwner }: AttachmentsProps) => {
       description="Attached images or PDFs"
       content={
         <>
-          <div className="mx-2 mb-4">
+          <div className="mx-2 flex flex-col gap-y-2 mb-4">
             {attachments.map((attachment) => (
               <AttachmentItem key={attachment.id} attachment={attachment} />
             ))}
