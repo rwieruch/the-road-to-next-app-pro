@@ -15,6 +15,7 @@ import { s3 } from "@/lib/aws";
 import { prisma } from "@/lib/prisma";
 import { ticketPath } from "@/paths";
 import { ACCEPTED, MAX_SIZE } from "../constants";
+import { isComment, isTicket } from "../types";
 import { generateS3Key } from "../utils/generate-s3-key";
 import { sizeInMB } from "../utils/size";
 
@@ -102,11 +103,15 @@ export const createAttachments = async (
       let organizationId = "";
       switch (entity) {
         case "TICKET": {
-          organizationId = subject.organizationId;
+          if (isTicket(subject)) {
+            organizationId = subject.organizationId;
+          }
           break;
         }
         case "COMMENT": {
-          organizationId = subject.ticket.organizationId;
+          if (isComment(subject)) {
+            organizationId = subject.ticket.organizationId;
+          }
           break;
         }
       }
@@ -141,10 +146,14 @@ export const createAttachments = async (
 
   switch (entity) {
     case "TICKET":
-      revalidatePath(ticketPath(subject.id));
+      if (isTicket(subject)) {
+        revalidatePath(ticketPath(subject.id));
+      }
       break;
     case "COMMENT": {
-      revalidatePath(ticketPath(subject.ticket.id));
+      if (isComment(subject)) {
+        revalidatePath(ticketPath(subject.ticket.id));
+      }
       break;
     }
   }
