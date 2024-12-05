@@ -37,7 +37,10 @@ export const deleteAttachment = async (id: string) => {
     await inngest.send({
       name: "app/attachment.deleted",
       data: {
-        attachmentId: id,
+        organizationId: attachment.ticket.organizationId,
+        ticketId: attachment.ticket.id,
+        fileName: attachment.name,
+        attachmentId: attachment.id,
       },
     });
   } catch (error) {
