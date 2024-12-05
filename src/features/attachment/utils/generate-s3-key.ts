@@ -1,15 +1,19 @@
+import { AttachmentEntity } from "@prisma/client";
+
 type GenerateKeyArgs = {
   organizationId: string;
-  ticketId: string;
+  entityId: string;
+  entity: AttachmentEntity;
   fileName: string;
   attachmentId: string;
 };
 
 export const generateS3Key = ({
   organizationId,
-  ticketId,
+  entityId,
+  entity,
   fileName,
   attachmentId,
 }: GenerateKeyArgs) => {
-  return `${organizationId}/${ticketId}/${fileName}-${attachmentId}`;
+  return `${organizationId}/${entity}/${entityId}/${fileName}-${attachmentId}`;
 };
