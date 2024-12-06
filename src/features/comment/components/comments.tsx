@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import { CardCompact } from "@/components/card-compact";
 import { Skeleton } from "@/components/ui/skeleton";
+import { AttachmentCreateButton } from "@/features/attachment/components/attachment-create-button";
 import { PaginatedData } from "@/types/pagination";
 import { getComments } from "../queries/get-comments";
 import { CommentWithMetadata } from "../types";
@@ -74,8 +75,13 @@ const Comments = ({ ticketId, paginatedComments }: CommentsProps) => {
             buttons={[
               ...(comment.isOwner
                 ? [
-                    <CommentDeleteButton
+                    <AttachmentCreateButton
                       key="0"
+                      entityId={comment.id}
+                      entity="COMMENT"
+                    />,
+                    <CommentDeleteButton
+                      key="1"
                       id={comment.id}
                       onDeleteComment={handleDeleteComment}
                     />,
