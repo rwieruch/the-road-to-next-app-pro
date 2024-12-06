@@ -22,9 +22,6 @@ export const attachmentDeletedEvent = inngest.createFunction(
       event.data;
 
     try {
-      // remove
-      // const attachment = await prisma.attachment.findUniqueOrThrow(...);
-
       await s3.send(
         new DeleteObjectCommand({
           Bucket: process.env.AWS_BUCKET_NAME,
