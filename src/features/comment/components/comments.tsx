@@ -45,9 +45,12 @@ const Comments = ({ ticketId, paginatedComments }: CommentsProps) => {
 
   const queryClient = useQueryClient();
 
-  const handleDeleteComment = () => queryClient.invalidateQueries({ queryKey });
-
   const handleCreateComment = () => queryClient.invalidateQueries({ queryKey });
+  const handleDeleteComment = () => queryClient.invalidateQueries({ queryKey });
+  const handleCreateAttachment = () =>
+    queryClient.invalidateQueries({ queryKey });
+  const handleDeleteAttachment = () =>
+    queryClient.invalidateQueries({ queryKey });
 
   const { ref, inView } = useInView();
 
@@ -81,7 +84,13 @@ const Comments = ({ ticketId, paginatedComments }: CommentsProps) => {
                   attachments={comment.attachments}
                   buttons={(attachmentId) => [
                     ...(comment.isOwner
-                      ? [<AttachmentDeleteButton key="0" id={attachmentId} />]
+                      ? [
+                          <AttachmentDeleteButton
+                            key="0"
+                            id={attachmentId}
+                            onDeleteAttachment={handleDeleteAttachment}
+                          />,
+                        ]
                       : []),
                   ]}
                 />
@@ -101,6 +110,7 @@ const Comments = ({ ticketId, paginatedComments }: CommentsProps) => {
                         key="0"
                         entityId={comment.id}
                         entity="COMMENT"
+                        onCreateAttachment={handleCreateAttachment}
                       />,
                       <CommentDeleteButton
                         key="1"
