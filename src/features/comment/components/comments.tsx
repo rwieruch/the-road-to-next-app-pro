@@ -6,6 +6,8 @@ import { useInView } from "react-intersection-observer";
 import { CardCompact } from "@/components/card-compact";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AttachmentCreateButton } from "@/features/attachment/components/attachment-create-button";
+import { AttachmentDeleteButton } from "@/features/attachment/components/attachment-delete-button";
+import { AttachmentList } from "@/features/attachment/components/attachment-list";
 import { PaginatedData } from "@/types/pagination";
 import { getComments } from "../queries/get-comments";
 import { CommentWithMetadata } from "../types";
@@ -68,28 +70,49 @@ const Comments = ({ ticketId, paginatedComments }: CommentsProps) => {
         }
       />
       <div className="flex flex-col gap-y-2 ml-8">
-        {comments.map((comment) => (
-          <CommentItem
-            key={comment.id}
-            comment={comment}
-            buttons={[
-              ...(comment.isOwner
-                ? [
-                    <AttachmentCreateButton
-                      key="0"
-                      entityId={comment.id}
-                      entity="COMMENT"
-                    />,
-                    <CommentDeleteButton
-                      key="1"
-                      id={comment.id}
-                      onDeleteComment={handleDeleteComment}
-                    />,
-                  ]
-                : []),
-            ]}
-          />
-        ))}
+        {comments.map((comment) => {
+          const sections = [];
+
+          if (comment.attachments?.length) {
+            sections.push({
+              label: "Attachments",
+              content: (
+                <AttachmentList
+                  attachments={comment.attachments}
+                  buttons={(attachmentId) => [
+                    ...(comment.isOwner
+                      ? [<AttachmentDeleteButton key="0" id={attachmentId} />]
+                      : []),
+                  ]}
+                />
+              ),
+            });
+          }
+
+          return (
+            <CommentItem
+              key={comment.id}
+              comment={comment}
+              sections={sections}
+              buttons={[
+                ...(comment.isOwner
+                  ? [
+                      <AttachmentCreateButton
+                        key="0"
+                        entityId={comment.id}
+                        entity="COMMENT"
+                      />,
+                      <CommentDeleteButton
+                        key="1"
+                        id={comment.id}
+                        onDeleteComment={handleDeleteComment}
+                      />,
+                    ]
+                  : []),
+              ]}
+            />
+          );
+        })}
 
         {isFetchingNextPage && (
           <>
