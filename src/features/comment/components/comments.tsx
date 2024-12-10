@@ -9,6 +9,7 @@ import { AttachmentCreateButton } from "@/features/attachment/components/attachm
 import { AttachmentDeleteButton } from "@/features/attachment/components/attachment-delete-button";
 import { AttachmentList } from "@/features/attachment/components/attachment-list";
 import { PaginatedData } from "@/types/pagination";
+import { removeAttachmentFromCache } from "../cache";
 import { getComments } from "../queries/get-comments";
 import { CommentWithMetadata } from "../types";
 import { CommentCreateForm } from "./comment-create-form";
@@ -49,8 +50,15 @@ const Comments = ({ ticketId, paginatedComments }: CommentsProps) => {
   const handleDeleteComment = () => queryClient.invalidateQueries({ queryKey });
   const handleCreateAttachment = () =>
     queryClient.invalidateQueries({ queryKey });
-  const handleDeleteAttachment = () =>
+
+  const handleDeleteAttachment = (commentId: string, attachmentId: string) => {
+    removeAttachmentFromCache(
+      { queryClient, queryKey },
+      { attachmentId, commentId }
+    );
+
     queryClient.invalidateQueries({ queryKey });
+  };
 
   const { ref, inView } = useInView();
 
@@ -88,7 +96,9 @@ const Comments = ({ ticketId, paginatedComments }: CommentsProps) => {
                           <AttachmentDeleteButton
                             key="0"
                             id={attachmentId}
-                            onDeleteAttachment={handleDeleteAttachment}
+                            onDeleteAttachment={(attachmentId) =>
+                              handleDeleteAttachment(comment.id, attachmentId)
+                            }
                           />,
                         ]
                       : []),
