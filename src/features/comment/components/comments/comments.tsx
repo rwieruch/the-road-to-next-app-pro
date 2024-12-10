@@ -6,11 +6,11 @@ import { useInView } from "react-intersection-observer";
 import { CardCompact } from "@/components/card-compact";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PaginatedData } from "@/types/pagination";
-import { getComments } from "../queries/get-comments";
-import { CommentWithMetadata } from "../types";
-import { CommentCreateForm } from "./comment-create-form";
-import { CommentDeleteButton } from "./comment-delete-button";
-import { CommentItem } from "./comment-item";
+import { getComments } from "../../queries/get-comments";
+import { CommentWithMetadata } from "../../types";
+import { CommentCreateForm } from "../comment-create-form";
+import { CommentDeleteButton } from "../comment-delete-button";
+import { CommentItem } from "../comment-item";
 
 type CommentsProps = {
   ticketId: string;
