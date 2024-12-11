@@ -1,7 +1,47 @@
-import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  InfiniteData,
+  QueryClient,
+  QueryKey,
+  useInfiniteQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { PaginatedData } from "@/types/pagination";
 import { getComments } from "../../queries/get-comments";
 import { CommentWithMetadata } from "../../types";
+
+type CacheArgs = {
+  queryClient: QueryClient;
+  queryKey: QueryKey;
+};
+
+const removeAttachmentFromCache = (
+  { queryClient, queryKey }: CacheArgs,
+  payload: { attachmentId: string; commentId: string }
+) => {
+  queryClient.setQueryData<
+    InfiniteData<Awaited<ReturnType<typeof getComments>>>
+  >(queryKey, (cache) => {
+    if (!cache) return cache;
+
+    const pages = cache.pages.map((page) => ({
+      ...page,
+      list: page.list.map((comment) => {
+        if (comment.id === payload.commentId) {
+          return {
+            ...comment,
+            attachments: comment.attachments.filter(
+              (attachment) => attachment.id !== payload.attachmentId
+            ),
+          };
+        }
+
+        return comment;
+      }),
+    }));
+
+    return { ...cache, pages };
+  });
+};
 
 export const usePaginatedComments = (
   ticketId: string,
@@ -31,6 +71,15 @@ export const usePaginatedComments = (
 
   const queryClient = useQueryClient();
 
+  const handleDeleteAttachment = (commentId: string, attachmentId: string) => {
+    removeAttachmentFromCache(
+      { queryClient, queryKey },
+      { attachmentId, commentId }
+    );
+
+    queryClient.invalidateQueries({ queryKey });
+  };
+
   return {
     comments,
     fetchNextPage,
@@ -39,6 +88,6 @@ export const usePaginatedComments = (
     onCreateComment: () => queryClient.invalidateQueries({ queryKey }),
     onDeleteComment: () => queryClient.invalidateQueries({ queryKey }),
     onCreateAttachment: () => queryClient.invalidateQueries({ queryKey }),
-    onDeleteAttachment: () => queryClient.invalidateQueries({ queryKey }),
+    onDeleteAttachment: handleDeleteAttachment,
   };
 };
