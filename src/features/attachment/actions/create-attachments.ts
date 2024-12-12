@@ -33,7 +33,8 @@ export const createAttachments = async (
 
   const subject = await attachmentService.getAttachmentSubject(
     entityId,
-    entity
+    entity,
+    user
   );
 
   if (!subject) {
@@ -59,16 +60,12 @@ export const createAttachments = async (
     return fromErrorToActionState(error);
   }
 
-  switch (entity) {
+  switch (subject.entity) {
     case "TICKET":
-      if (isTicket(subject)) {
-        revalidatePath(ticketPath(subject.id));
-      }
+      revalidatePath(ticketPath(subject.ticketId));
       break;
     case "COMMENT": {
-      if (isComment(subject)) {
-        revalidatePath(ticketPath(subject.ticket.id));
-      }
+      revalidatePath(ticketPath(subject.ticketId));
       break;
     }
   }
