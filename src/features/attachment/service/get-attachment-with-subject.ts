@@ -1,5 +1,5 @@
 import * as attachmentData from "../data";
-import * as attachmentSubjectDTO from "../dto/attachment-subject-dto";
+import { AttachmentSubjectDTO } from "../dto/attachment-subject-dto";
 
 export const getAttachmentWithSubject = async (
   attachmentId: string,
@@ -10,10 +10,10 @@ export const getAttachmentWithSubject = async (
   let subject;
   switch (attachment?.entity) {
     case "TICKET":
-      subject = attachmentSubjectDTO.fromTicket(attachment.ticket, userId);
+      subject = AttachmentSubjectDTO.fromTicket(attachment.ticket, userId);
       break;
     case "COMMENT":
-      subject = attachmentSubjectDTO.fromComment(attachment.comment, userId);
+      subject = AttachmentSubjectDTO.fromComment(attachment.comment, userId);
       break;
   }
 
