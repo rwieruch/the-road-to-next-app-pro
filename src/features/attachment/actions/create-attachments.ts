@@ -13,7 +13,6 @@ import { isOwner } from "@/features/auth/utils/is-owner";
 import { ticketPath } from "@/paths";
 import { filesSchema } from "../schema/files";
 import * as attachmentService from "../service";
-import { isComment, isTicket } from "../types";
 
 const createAttachmentsSchema = z.object({
   files: filesSchema,
