@@ -1,4 +1,3 @@
-import { AttachmentCreateButton } from "@/features/attachment/components/attachment-create-button";
 import { AttachmentDeleteButton } from "@/features/attachment/components/attachment-delete-button";
 import { AttachmentList } from "@/features/attachment/components/attachment-list";
 import { CommentWithMetadata } from "../types";
@@ -15,34 +14,20 @@ type CommentListProps = {
 const CommentList = ({
   comments,
   onDeleteComment,
-  onCreateAttachment,
   onDeleteAttachment,
 }: CommentListProps) => {
   return (
     <>
       {comments.map((comment) => {
-        const attachmentCreateButton = (
-          <AttachmentCreateButton
-            key="0"
-            entityId={comment.id}
-            entity="COMMENT"
-            onCreateAttachment={onCreateAttachment}
-          />
-        );
-
         const commentDeleteButton = (
           <CommentDeleteButton
-            key="1"
+            key="0"
             id={comment.id}
             onDeleteComment={onDeleteComment}
           />
         );
 
-        const buttons = [
-          ...(comment.isOwner
-            ? [attachmentCreateButton, commentDeleteButton]
-            : []),
-        ];
+        const buttons = [...(comment.isOwner ? [commentDeleteButton] : [])];
 
         const sections = [];
 
