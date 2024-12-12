@@ -15,7 +15,7 @@ import { s3 } from "@/lib/aws";
 import { prisma } from "@/lib/prisma";
 import { ticketPath } from "@/paths";
 import { ACCEPTED, MAX_SIZE } from "../constants";
-import * as attachmentService from "../service/get-attachment-subject";
+import * as attachmentService from "../service";
 import { isComment, isTicket } from "../types";
 import { generateS3Key } from "../utils/generate-s3-key";
 import { getOrganizationIdByAttachment } from "../utils/helpers";
