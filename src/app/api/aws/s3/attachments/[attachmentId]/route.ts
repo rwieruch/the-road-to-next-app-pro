@@ -1,38 +1,34 @@
 import { GetObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { NextRequest } from "next/server";
+import * as attachmentData from "@/features/attachment/data";
+import * as attachmentSubjectDTO from "@/features/attachment/dto/attachment-subject-dto";
 import { generateS3Key } from "@/features/attachment/utils/generate-s3-key";
-import { getOrganizationIdByAttachment } from "@/features/attachment/utils/helpers";
 import { getAuthOrRedirect } from "@/features/auth/queries/get-auth-or-redirect";
 import { s3 } from "@/lib/aws";
-import { prisma } from "@/lib/prisma";
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ attachmentId: string }> }
 ) {
-  await getAuthOrRedirect();
+  const { user } = await getAuthOrRedirect();
 
   const { attachmentId } = await params;
 
-  const attachment = await prisma.attachment.findUniqueOrThrow({
-    where: {
-      id: attachmentId,
-    },
-    include: {
-      ticket: true,
-      comment: {
-        include: {
-          ticket: true,
-        },
-      },
-    },
-  });
+  const attachment = await attachmentData.getAttachment(attachmentId);
 
-  const subject = attachment.ticket ?? attachment.comment;
+  let subject;
+  switch (attachment?.entity) {
+    case "TICKET":
+      subject = attachmentSubjectDTO.fromTicket(attachment.ticket, user.id);
+      break;
+    case "COMMENT":
+      subject = attachmentSubjectDTO.fromComment(attachment.comment, user.id);
+      break;
+  }
 
-  if (!subject) {
-    throw new Error("Subject not found");
+  if (!subject || !attachment) {
+    throw new Error("Not found");
   }
 
   const presignedUrl = await getSignedUrl(
@@ -40,12 +36,9 @@ export async function GET(
     new GetObjectCommand({
       Bucket: process.env.AWS_BUCKET_NAME,
       Key: generateS3Key({
-        organizationId: getOrganizationIdByAttachment(
-          attachment.entity,
-          subject
-        ),
-        entityId: subject.id,
-        entity: attachment.entity,
+        organizationId: subject.organizationId,
+        entityId: subject.entityId,
+        entity: subject.entity,
         fileName: attachment.name,
         attachmentId: attachment.id,
       }),
