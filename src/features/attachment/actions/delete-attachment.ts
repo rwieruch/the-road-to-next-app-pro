@@ -5,28 +5,18 @@ import {
   fromErrorToActionState,
   toActionState,
 } from "@/components/form/utils/to-action-state";
-import * as attachmentSubjectDTO from "@/features/attachment/dto/attachment-subject-dto";
 import { getAuthOrRedirect } from "@/features/auth/queries/get-auth-or-redirect";
 import { isOwner } from "@/features/auth/utils/is-owner";
 import { inngest } from "@/lib/inngest";
 import { prisma } from "@/lib/prisma";
 import { ticketPath } from "@/paths";
-import * as attachmentData from "../data";
+import * as attachmentService from "../service";
 
 export const deleteAttachment = async (id: string) => {
   const { user } = await getAuthOrRedirect();
 
-  const attachment = await attachmentData.getAttachment(id);
-
-  let subject;
-  switch (attachment?.entity) {
-    case "TICKET":
-      subject = attachmentSubjectDTO.fromTicket(attachment.ticket, user.id);
-      break;
-    case "COMMENT":
-      subject = attachmentSubjectDTO.fromComment(attachment.comment, user.id);
-      break;
-  }
+  const { attachment, subject } =
+    await attachmentService.getAttachmentWithSubject(id, user.id);
 
   if (!subject || !attachment) {
     return toActionState("ERROR", "Not found");
