@@ -15,7 +15,7 @@ import { filesSchema } from "../schema/files";
 import * as attachmentService from "../service";
 
 const createAttachmentsSchema = z.object({
-  files: filesSchema,
+  files: filesSchema.refine((files) => files.length !== 0, "File is required"),
 });
 
 type CreateAttachmentsArgs = {

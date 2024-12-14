@@ -13,5 +13,4 @@ export const filesSchema = z
   .refine(
     (files) => files.every((file) => ACCEPTED.includes(file.type)),
     "File type is not supported"
-  )
-  .refine((files) => files.length !== 0, "File is required");
+  );
