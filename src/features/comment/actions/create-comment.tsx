@@ -12,7 +12,7 @@ import { filesSchema } from "@/features/attachment/schema/files";
 import * as attachmentService from "@/features/attachment/service";
 import { getAuthOrRedirect } from "@/features/auth/queries/get-auth-or-redirect";
 import * as commentData from "@/features/comment/data";
-import * as ticketService from "@/features/ticket/service";
+import * as ticketData from "@/features/ticket/data";
 import { ticketPath } from "@/paths";
 import { findTicketIdsFromText } from "@/utils/find-ids-from-text";
 
@@ -55,7 +55,7 @@ export const createComment = async (
       files,
     });
 
-    await ticketService.connectReferencedTickets(
+    await ticketData.connectReferencedTickets(
       ticketId,
       findTicketIdsFromText("tickets", content)
     );
