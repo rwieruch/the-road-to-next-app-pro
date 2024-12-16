@@ -1,5 +1,7 @@
+import { revalidatePath } from "next/cache";
 import { getTicket } from "@/features/ticket/queries/get-ticket";
 import { prisma } from "@/lib/prisma";
+import { ticketsPath } from "@/paths";
 import { hashToken } from "@/utils/crypto";
 
 export async function GET(
@@ -63,6 +65,8 @@ export async function DELETE(
       },
     }),
   ]);
+
+  revalidatePath(ticketsPath());
 
   return Response.json({ ticketId });
 }
