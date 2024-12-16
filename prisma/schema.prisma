@@ -23,6 +23,7 @@ model Credential {
   id             String       @id @default(cuid())
   createdAt      DateTime     @default(now())
   secretHash     String       @unique
+  lastUsed       DateTime?
   name           String
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   organizationId String
