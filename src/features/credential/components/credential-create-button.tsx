@@ -54,7 +54,15 @@ const CredentialCreateButton = ({
             Create a new API secret for your organization
           </DialogDescription>
         </DialogHeader>
-        <Form action={action} actionState={actionState} onSuccess={handleClose}>
+        <Form
+          action={action}
+          actionState={actionState}
+          onSuccess={handleClose}
+          toastOptions={{
+            duration: Infinity,
+            closeButton: true,
+          }}
+        >
           <div className="grid gap-4 py-4">
             <div>
               <div className="grid grid-cols-4 items-center gap-4">
