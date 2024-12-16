@@ -20,6 +20,8 @@ export const membershipsPath = (organizationId: string) =>
   `/organization/${organizationId}/memberships`;
 export const invitationsPath = (organizationId: string) =>
   `/organization/${organizationId}/invitations`;
+export const credentialsPath = (organizationId: string) =>
+  `/organization/${organizationId}/credentials`;
 
 export const accountProfilePath = () => "/account/profile";
 export const accountPasswordPath = () => "/account/password";
