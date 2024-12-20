@@ -4,8 +4,21 @@ import { findTicketIdsFromText } from "@/utils/find-ids-from-text";
 import * as ticketData from "../data";
 
 export const disconnectReferencedTicketsViaComment = async (
-  comment: Comment
+  commentIdOrComment: Comment | string
 ) => {
+  const comment =
+    typeof commentIdOrComment === "string"
+      ? await prisma.comment.findUnique({
+          where: {
+            id: commentIdOrComment,
+          },
+        })
+      : commentIdOrComment;
+
+  if (!comment) {
+    throw new Error("Comment not found !!!");
+  }
+
   const ticketIds = findTicketIdsFromText("tickets", comment.content);
 
   if (!ticketIds.length) return;
