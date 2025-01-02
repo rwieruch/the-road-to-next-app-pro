@@ -11,6 +11,8 @@
     "type": "tsc --noEmit",
     "postinstall": "prisma generate",
     "prisma-seed": "tsx prisma/seed.ts",
+    "stripe-seed": "tsx src/lib/stripe/seed.ts",
+    "seed": "npm run prisma-seed && npm run stripe-seed",
     "email": "email dev --dir src/emails"
   },
   "dependencies": {
