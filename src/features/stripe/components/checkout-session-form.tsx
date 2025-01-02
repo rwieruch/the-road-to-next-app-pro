@@ -6,6 +6,7 @@ import { Form } from "@/components/form/form";
 import { EMPTY_ACTION_STATE } from "@/components/form/utils/to-action-state";
 import { Button } from "@/components/ui/button";
 import { createCheckoutSession } from "../actions/create-checkout-session";
+import { createCustomerPortal } from "../actions/create-customer-portal";
 
 type CheckoutSessionFormProps = {
   organizationId: string | null | undefined;
@@ -20,12 +21,14 @@ const CheckoutSessionForm = ({
   activePriceId,
   children,
 }: CheckoutSessionFormProps) => {
+  const isActivePrice = activePriceId === priceId;
+
   const [actionState, action] = useActionState(
-    createCheckoutSession.bind(null, organizationId, priceId),
+    !activePriceId
+      ? createCheckoutSession.bind(null, organizationId, priceId)
+      : createCustomerPortal.bind(null, organizationId),
     EMPTY_ACTION_STATE
   );
-
-  const isActivePrice = activePriceId === priceId;
 
   return (
     <Form action={action} actionState={actionState}>
@@ -39,7 +42,7 @@ const CheckoutSessionForm = ({
         {!activePriceId ? null : isActivePrice ? (
           <span>Current Plan</span>
         ) : (
-          <span>Other Plan</span>
+          <span>Change Plan</span>
         )}
         <div>{children}</div>
       </Button>
