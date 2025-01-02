@@ -1,3 +1,4 @@
+import { useTransition } from "react";
 import { PaginatedData } from "@/types/pagination";
 import { Button } from "./ui/button";
 import {
@@ -34,19 +35,25 @@ const Pagination = ({
     onPagination({ ...pagination, page: pagination.page - 1 });
   };
 
+  const [isPending, startTransition] = useTransition();
+
   const handleNextPage = () => {
-    onPagination({ ...pagination, page: pagination.page + 1 });
+    startTransition(() => {
+      onPagination({ ...pagination, page: pagination.page + 1 });
+    });
   };
 
   const handleChangeSize = (size: string) => {
-    onPagination({ page: 0, size: parseInt(size) });
+    startTransition(() => {
+      onPagination({ page: 0, size: parseInt(size) });
+    });
   };
 
   const previousButton = (
     <Button
       variant="outline"
       size="sm"
-      disabled={pagination.page < 1}
+      disabled={pagination.page < 1 || isPending}
       onClick={handlePreviousPage}
     >
       Previous
@@ -57,7 +64,7 @@ const Pagination = ({
     <Button
       variant="outline"
       size="sm"
-      disabled={!hasNextPage}
+      disabled={!hasNextPage || isPending}
       onClick={handleNextPage}
     >
       Next
