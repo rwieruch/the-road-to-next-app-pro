@@ -1,9 +1,9 @@
-import { Heading } from "@/components/heading";
-import { OrganizationBreadcrumbs } from "../_navigation/tabs";
-import { Placeholder } from "@/components/placeholder";
-import { pricingPath } from "@/paths";
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { Heading } from "@/components/heading";
+import { Placeholder } from "@/components/placeholder";
+import { Button } from "@/components/ui/button";
+import { pricingPath } from "@/paths";
+import { OrganizationBreadcrumbs } from "../_navigation/tabs";
 
 type SubscriptionPageProps = {
   params: Promise<{
