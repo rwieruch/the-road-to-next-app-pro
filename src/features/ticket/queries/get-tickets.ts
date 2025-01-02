@@ -1,3 +1,4 @@
+import { PAGE_SIZES } from "@/components/pagination/constants";
 import { getAuth } from "@/features/auth/queries/get-auth";
 import { isOwner } from "@/features/auth/utils/is-owner";
 import { getActiveOrganization } from "@/features/organization/queries/get-active-organization";
@@ -12,6 +13,10 @@ export const getTickets = async (
 ) => {
   const { user } = await getAuth();
   const activeOrganization = await getActiveOrganization();
+
+  if (!PAGE_SIZES.includes(searchParams.size)) {
+    throw new Error("Invalid page size");
+  }
 
   const where = {
     userId,

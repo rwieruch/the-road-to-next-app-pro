@@ -1,13 +1,14 @@
 import { useTransition } from "react";
-import { PaginatedData } from "@/types/pagination";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "./ui/select";
+} from "../ui/select";
+import { PAGE_SIZES } from "./constants";
+import { PaginatedData } from "./types";
 
 type PageAndSize = {
   page: number;
@@ -80,11 +81,11 @@ const Pagination = ({
         <SelectValue />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value="5">5</SelectItem>
-        <SelectItem value="10">10</SelectItem>
-        <SelectItem value="25">25</SelectItem>
-        <SelectItem value="50">50</SelectItem>
-        <SelectItem value="100">100</SelectItem>
+        {PAGE_SIZES.map((size) => (
+          <SelectItem key={size} value={size.toString()}>
+            {size}
+          </SelectItem>
+        ))}
       </SelectContent>
     </Select>
   );

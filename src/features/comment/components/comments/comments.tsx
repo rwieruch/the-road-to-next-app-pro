@@ -3,8 +3,8 @@
 import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import { CardCompact } from "@/components/card-compact";
+import { PaginatedData } from "@/components/pagination/types";
 import { Skeleton } from "@/components/ui/skeleton";
-import { PaginatedData } from "@/types/pagination";
 import { CommentWithMetadata } from "../../types";
 import { CommentCreateForm } from "../comment-create-form";
 import { CommentList } from "../comment-list";

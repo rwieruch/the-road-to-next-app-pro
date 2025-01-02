@@ -5,7 +5,7 @@ import {
   useInfiniteQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import { PaginatedData } from "@/types/pagination";
+import { PaginatedData } from "@/components/pagination/types";
 import { getComments } from "../../queries/get-comments";
 import { CommentWithMetadata } from "../../types";
 
