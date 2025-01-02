@@ -2,6 +2,7 @@ import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { onSubscriptionCreated } from "@/features/stripe/webhooks/on-subscription-created";
+import { onSubscriptionDeleted } from "@/features/stripe/webhooks/on-subscription-deleted";
 import { onSubscriptionUpdated } from "@/features/stripe/webhooks/on-subscription-updated";
 import { stripe } from "@/lib/stripe";
 
@@ -33,6 +34,9 @@ export async function POST(req: Request) {
         break;
       case "customer.subscription.updated":
         onSubscriptionUpdated(event.data.object);
+        break;
+      case "customer.subscription.deleted":
+        onSubscriptionDeleted(event.data.object);
         break;
       default:
         console.log(`Unhandled event type ${event.type}.`);
