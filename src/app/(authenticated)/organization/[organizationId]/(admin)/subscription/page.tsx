@@ -1,5 +1,9 @@
 import { Heading } from "@/components/heading";
 import { OrganizationBreadcrumbs } from "../_navigation/tabs";
+import { Placeholder } from "@/components/placeholder";
+import { pricingPath } from "@/paths";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 type SubscriptionPageProps = {
   params: Promise<{
@@ -16,6 +20,15 @@ const SubscriptionPage = async ({ params }: SubscriptionPageProps) => {
         title="Subscription"
         description="Manage your subscription"
         tabs={<OrganizationBreadcrumbs />}
+      />
+
+      <Placeholder
+        label="No subscription for this organization"
+        button={
+          <Button asChild variant="outline">
+            <Link href={pricingPath()}>Go to Pricing</Link>
+          </Button>
+        }
       />
     </div>
   );
