@@ -40,9 +40,14 @@ const seed = async () => {
     },
   });
 
+  const testClock = await stripe.testHelpers.testClocks.create({
+    frozen_time: Math.round(new Date().getTime() / 1000),
+  });
+
   const customer = await stripe.customers.create({
     name: organization.name,
     email: organization.memberships[0].user.email,
+    test_clock: testClock.id,
   });
 
   await prisma.stripeCustomer.create({
