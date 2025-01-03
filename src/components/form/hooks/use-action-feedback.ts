@@ -11,14 +11,15 @@ type UseActionFeedbackOptions = {
 };
 
 const useActionFeedback = (
-  actionState: ActionState,
+  actionState: ActionState | undefined,
   options: UseActionFeedbackOptions
 ) => {
-  const prevTimestamp = useRef(actionState.timestamp);
-  const isUpdate = prevTimestamp.current !== actionState.timestamp;
+  const prevTimestamp = useRef(actionState?.timestamp);
+  const isUpdate = prevTimestamp.current !== actionState?.timestamp;
 
   useEffect(() => {
     if (!isUpdate) return;
+    if (!actionState) return;
 
     if (actionState.status === "SUCCESS") {
       options.onSuccess?.({ actionState });

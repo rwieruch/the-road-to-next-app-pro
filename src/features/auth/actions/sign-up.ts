@@ -9,6 +9,7 @@ import {
   toActionState,
 } from "@/components/form/utils/to-action-state";
 import { hashPassword } from "@/features/password/utils/hash-and-verify";
+import { inngest } from "@/lib/inngest";
 import { createSession } from "@/lib/lucia";
 import { prisma } from "@/lib/prisma";
 import { ticketsPath } from "@/paths";
@@ -52,6 +53,37 @@ export const signUp = async (_actionState: ActionState, formData: FormData) => {
         username,
         email,
         passwordHash,
+      },
+    });
+
+    const invitation = await prisma.invitation.findUnique({
+      where: {
+        email,
+      },
+    });
+
+    if (invitation && invitation.status === "ACCEPTED_WITHOUT_ACCOUNT") {
+      await prisma.$transaction([
+        prisma.invitation.delete({
+          where: {
+            email,
+          },
+        }),
+        prisma.membership.create({
+          data: {
+            organizationId: invitation.organizationId,
+            userId: user.id,
+            membershipRole: "MEMBER",
+            isActive: false,
+          },
+        }),
+      ]);
+    }
+
+    await inngest.send({
+      name: "app/auth.sign-up",
+      data: {
+        userId: user.id,
       },
     });
 

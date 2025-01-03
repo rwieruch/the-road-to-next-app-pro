@@ -6,8 +6,8 @@ export const toCent = (amount: number) =>
 export const fromCent = (amount: number) =>
   new MyBig(amount).div(100).round(2).toNumber();
 
-export const toCurrencyFromCent = (amount: number) =>
+export const toCurrencyFromCent = (amount: number, currency?: string) =>
   new Intl.NumberFormat("en-US", {
     style: "currency",
-    currency: "USD",
+    currency: currency ?? "USD",
   }).format(fromCent(amount));

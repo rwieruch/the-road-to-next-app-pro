@@ -1,8 +1,10 @@
 import { notFound } from "next/navigation";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Separator } from "@/components/ui/separator";
-import { Comments } from "@/features/comment/components/comments";
+import { Attachments } from "@/features/attachment/components/attachments";
+import { Comments } from "@/features/comment/components/comments/comments";
 import { getComments } from "@/features/comment/queries/get-comments";
+import { ReferencedTickets } from "@/features/ticket/components/referenced-tickets";
 import { TicketItem } from "@/features/ticket/components/ticket-item";
 import { getTicket } from "@/features/ticket/queries/get-ticket";
 import { homePath } from "@/paths";
@@ -42,6 +44,14 @@ const TicketPage = async ({ params }: TicketPageProps) => {
         <TicketItem
           ticket={ticket}
           isDetail
+          attachments={
+            <Attachments
+              entityId={ticket.id}
+              entity="TICKET"
+              isOwner={ticket.isOwner}
+            />
+          }
+          referencedTickets={<ReferencedTickets ticketId={ticket.id} />}
           comments={
             <Comments
               ticketId={ticket.id}
