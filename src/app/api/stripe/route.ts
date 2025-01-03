@@ -30,13 +30,13 @@ export async function POST(req: Request) {
 
     switch (event.type) {
       case "customer.subscription.created":
-        onSubscriptionCreated(event.data.object);
+        onSubscriptionCreated(event.data.object, event.created);
         break;
       case "customer.subscription.updated":
-        onSubscriptionUpdated(event.data.object);
+        onSubscriptionUpdated(event.data.object, event.created);
         break;
       case "customer.subscription.deleted":
-        onSubscriptionDeleted(event.data.object);
+        onSubscriptionDeleted(event.data.object, event.created);
         break;
       default:
         console.log(`Unhandled event type ${event.type}.`);
