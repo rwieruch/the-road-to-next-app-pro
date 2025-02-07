@@ -26,6 +26,7 @@ type UseConfirmDialogArgs = {
   action: () => Promise<ActionState>;
   trigger: React.ReactElement | ((isLoading: boolean) => React.ReactElement);
   onSuccess?: (actionState: ActionState) => void;
+  onCleanup?: () => void;
 };
 
 const useConfirmDialog = ({
@@ -34,6 +35,7 @@ const useConfirmDialog = ({
   action,
   trigger,
   onSuccess,
+  onCleanup,
 }: UseConfirmDialogArgs) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -61,9 +63,11 @@ const useConfirmDialog = ({
     return () => {
       if (toastRef.current) {
         toast.dismiss(toastRef.current);
+
+        onCleanup?.();
       }
     };
-  }, [isPending]);
+  }, [isPending, onCleanup]);
 
   useActionFeedback(actionState, {
     onSuccess: ({ actionState }) => {
