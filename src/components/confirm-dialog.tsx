@@ -53,21 +53,38 @@ const useConfirmDialog = ({
 
   const toastRef = useRef<string | number | null>(null);
 
+  const runCleanupRef = useRef(false);
+
   useEffect(() => {
     if (isPending) {
       toastRef.current = toast.loading("Deleting ...");
+      runCleanupRef.current = true;
     } else if (toastRef.current) {
       toast.dismiss(toastRef.current);
+      runCleanupRef.current = false;
     }
 
     return () => {
       if (toastRef.current) {
         toast.dismiss(toastRef.current);
+      }
+    };
+  }, [onCleanup, isPending]);
 
+  // In the case when we never receive the latest actionState
+  // e.g. when the componponent is unmounted
+  // before the action is completed
+  // due to revalidation
+  // but should only run when there was an action
+  // not on redirect or other cases
+  useEffect(() => {
+    return () => {
+      if (runCleanupRef.current) {
         onCleanup?.();
       }
     };
-  }, [isPending, onCleanup]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useActionFeedback(actionState, {
     onSuccess: ({ actionState }) => {
