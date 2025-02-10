@@ -1,7 +1,6 @@
 "use client";
 
 import { LucideLoaderCircle, LucideTrash } from "lucide-react";
-import { toast } from "sonner";
 import { useConfirmDialog } from "@/components/confirm-dialog";
 import { Button } from "@/components/ui/button";
 import { deleteOrganization } from "../actions/delete-organization";
@@ -24,9 +23,6 @@ const OrganizationDeleteButton = ({
         )}
       </Button>
     ),
-    onCleanup: () => {
-      toast.success("Organization deleted");
-    },
   });
 
   return (
