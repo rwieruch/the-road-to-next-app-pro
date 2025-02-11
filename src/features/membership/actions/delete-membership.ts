@@ -1,10 +1,8 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
-import { setCookieByKey } from "@/actions/cookies";
 import { toActionState } from "@/components/form/utils/to-action-state";
+import { getAuthOrRedirect } from "@/features/auth/queries/get-auth-or-redirect";
 import { prisma } from "@/lib/prisma";
-import { membershipsPath } from "@/paths";
 import { getMemberships } from "../queries/get-memberships";
 
 export const deleteMembership = async ({
@@ -14,6 +12,8 @@ export const deleteMembership = async ({
   userId: string;
   organizationId: string;
 }) => {
+  await getAuthOrRedirect();
+
   const memberships = await getMemberships(organizationId);
 
   const isLastMembership = (memberships ?? []).length <= 1;
@@ -34,7 +34,5 @@ export const deleteMembership = async ({
     },
   });
 
-  revalidatePath(membershipsPath(organizationId));
-
-  await setCookieByKey("toast", "The membership has been deleted");
+  return toActionState("SUCCESS", "The membership has been deleted");
 };
