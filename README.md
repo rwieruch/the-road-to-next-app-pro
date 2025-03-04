@@ -35,3 +35,15 @@ npm run dev
 ```sh
 npx prisma studio
 ```
+
+```sh
+npm run email
+```
+
+```sh
+npx inngest-cli@latest dev
+```
+
+```sh
+stripe listen --forward-to localhost:3000/api/stripe
+```
