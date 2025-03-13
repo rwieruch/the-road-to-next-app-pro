@@ -14,6 +14,7 @@ model Organization {
   updatedAt   DateTime     @updatedAt
   name        String
   memberships Membership[]
+  tickets     Ticket[]
 }
 
 model Membership {
@@ -25,6 +26,9 @@ model Membership {
   joinedAt       DateTime       @default(now())
   isActive       Boolean
   membershipRole MembershipRole @default(MEMBER)
+
+  // permissions
+  canDeleteTicket Boolean @default(true)
 
   @@id(name: "membershipId", [organizationId, userId])
   @@index([organizationId])
@@ -81,19 +85,22 @@ model EmailVerificationToken {
 }
 
 model Ticket {
-  id        String       @id @default(cuid())
-  createdAt DateTime     @default(now())
-  updatedAt DateTime     @updatedAt
-  title     String
-  content   String       @db.VarChar(1024)
-  status    TicketStatus @default(OPEN)
-  deadline  String
-  bounty    Int
-  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String
-  comments  Comment[]
+  id             String       @id @default(cuid())
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  title          String
+  content        String       @db.VarChar(1024)
+  status         TicketStatus @default(OPEN)
+  deadline       String
+  bounty         Int
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId         String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId String
+  comments       Comment[]
 
   @@index([userId])
+  @@index([organizationId])
 }
 
 model Comment {
