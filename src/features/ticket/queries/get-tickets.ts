@@ -14,10 +14,6 @@ export const getTickets = async (
   const { user } = await getAuth();
   const activeOrganization = await getActiveOrganization();
 
-  if (!PAGE_SIZES.includes(searchParams.size)) {
-    throw new Error("Invalid page size");
-  }
-
   const where = {
     userId,
     title: {
