@@ -13,7 +13,7 @@ const users = [
     username: "user",
     // use your own email here
     email: "hello@road-to-next.com",
-    emailVerified: false,
+    emailVerified: true,
   },
 ];
 
