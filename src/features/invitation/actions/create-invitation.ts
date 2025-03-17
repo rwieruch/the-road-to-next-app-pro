@@ -10,6 +10,7 @@ import {
 import { getAdminOrRedirect } from "@/features/membership/queries/get-admin-or-redirect";
 import { prisma } from "@/lib/prisma";
 import { invitationsPath } from "@/paths";
+import { generateInvitationLink } from "../utils/generate-invitation-link";
 
 const createInvitationSchema = z.object({
   email: z.string().min(1, { message: "Is required" }).max(191).email(),
@@ -20,7 +21,7 @@ export const createInvitation = async (
   _actionState: ActionState,
   formData: FormData
 ) => {
-  await getAdminOrRedirect(organizationId);
+  const { user } = await getAdminOrRedirect(organizationId);
 
   try {
     const { email } = createInvitationSchema.parse({
@@ -43,7 +44,15 @@ export const createInvitation = async (
       );
     }
 
-    // TODO invite by email link to join organization
+    const emailInvitationLink = await generateInvitationLink(
+      user.id,
+      organizationId,
+      email
+    );
+
+    // TODO: Send email with invitation link
+    // instead we will just print it to the console for now
+    console.log(emailInvitationLink);
   } catch (error) {
     return fromErrorToActionState(error);
   }

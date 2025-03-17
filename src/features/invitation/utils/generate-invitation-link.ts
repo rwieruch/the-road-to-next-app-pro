@@ -11,6 +11,7 @@ export const generateInvitationLink = async (
   await prisma.invitation.deleteMany({
     where: {
       email,
+      organizationId,
     },
   });
 
