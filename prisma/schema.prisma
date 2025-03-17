@@ -19,16 +19,22 @@ model Organization {
 }
 
 model Invitation {
-  createdAt       DateTime     @default(now())
-  updatedAt       DateTime     @updatedAt
-  tokenHash       String       @unique
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  tokenHash       String           @unique
   email           String
-  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organization    Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   organizationId  String
-  invitedByUser   User?        @relation(fields: [invitedByUserId], references: [id], onDelete: SetNull)
+  invitedByUser   User?            @relation(fields: [invitedByUserId], references: [id], onDelete: SetNull)
   invitedByUserId String?
+  status          InvitationStatus @default(PENDING)
 
   @@index([organizationId])
+}
+
+enum InvitationStatus {
+  PENDING
+  ACCEPTED_WITHOUT_ACCOUNT
 }
 
 model Membership {
