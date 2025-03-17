@@ -20,7 +20,6 @@ const MembershipsPage = async ({ params }: MembershipsPageProps) => {
         title="Memberships"
         description="Manage members in your organization"
         tabs={<OrganizationBreadcrumbs />}
-        actions={<InvitationCreateButton organizationId={organizationId} />}
       />
 
       <Suspense fallback={<Spinner />}>

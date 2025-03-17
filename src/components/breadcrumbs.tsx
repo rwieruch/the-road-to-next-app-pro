@@ -1,4 +1,4 @@
-import { ChevronDown, LucideSlash } from "lucide-react";
+import { LucideChevronDown, LucideSlash } from "lucide-react";
 import Link from "next/link";
 import { Fragment } from "react";
 import {
@@ -54,7 +54,7 @@ const Breadcrumbs = ({ breadcrumbs }: BreadcrumbsProps) => {
               <DropdownMenu>
                 <DropdownMenuTrigger className="flex items-center gap-1">
                   {breadcrumb.title}
-                  <ChevronDown className="h-4 w-4" />
+                  <LucideChevronDown className="h-4 w-4" />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start">
                   {breadcrumb.dropdown.map((item) => (
