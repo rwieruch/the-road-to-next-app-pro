@@ -56,29 +56,28 @@ export const signUp = async (_actionState: ActionState, formData: FormData) => {
       },
     });
 
-    const invitation = await prisma.invitation.findUnique({
+    const invitations = await prisma.invitation.findMany({
       where: {
         email,
       },
     });
 
-    if (invitation && invitation.status === "ACCEPTED_WITHOUT_ACCOUNT") {
-      await prisma.$transaction([
-        prisma.invitation.delete({
-          where: {
-            email,
-          },
-        }),
-        prisma.membership.create({
-          data: {
-            organizationId: invitation.organizationId,
-            userId: user.id,
-            membershipRole: "MEMBER",
-            isActive: false,
-          },
-        }),
-      ]);
-    }
+    await prisma.$transaction([
+      prisma.invitation.deleteMany({
+        where: {
+          email,
+        },
+      }),
+
+      prisma.membership.createMany({
+        data: invitations.map((invitation) => ({
+          organizationId: invitation.organizationId,
+          userId: user.id,
+          membershipRole: "MEMBER",
+          isActive: false,
+        })),
+      }),
+    ]);
 
     await inngest.send({
       name: "app/auth.sign-up",
