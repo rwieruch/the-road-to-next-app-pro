@@ -47,14 +47,7 @@ export const acceptInvitation = async (tokenId: string) => {
         }),
       ]);
     } else {
-      await prisma.invitation.update({
-        where: {
-          tokenHash,
-        },
-        data: {
-          status: "ACCEPTED_WITHOUT_ACCOUNT",
-        },
-      });
+      // TODO account does not exist
     }
   } catch (error) {
     return fromErrorToActionState(error);
