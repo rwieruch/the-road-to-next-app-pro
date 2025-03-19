@@ -25,7 +25,6 @@ type TicketItemProps = {
   ticket: TicketWithMetadata;
   isDetail?: boolean;
   attachments?: React.ReactNode;
-  referencedTickets?: React.ReactNode;
   comments?: React.ReactNode;
 };
 
@@ -33,7 +32,6 @@ const TicketItem = ({
   ticket,
   isDetail,
   attachments,
-  referencedTickets,
   comments,
 }: TicketItemProps) => {
   const detailButton = (
@@ -113,7 +111,6 @@ const TicketItem = ({
       </div>
 
       {attachments}
-      {referencedTickets}
       {comments}
     </div>
   );

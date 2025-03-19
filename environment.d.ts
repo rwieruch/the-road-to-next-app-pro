@@ -6,7 +6,6 @@ declare global {
       AWS_SECRET_ACCESS_KEY: string;
       AWS_BUCKET_NAME: string;
       AWS_REGION: string;
-      STRIPE_SECRET_KEY: string;
     }
   }
 }
