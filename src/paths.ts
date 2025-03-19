@@ -31,8 +31,3 @@ export const ticketEditPath = (ticketId: string) => `/tickets/${ticketId}/edit`;
 
 export const attachmentDownloadPath = (attachmentId: string) =>
   `/api/aws/s3/attachments/${attachmentId}`;
-
-export const pricingPath = () => "/pricing";
-
-export const subscriptionPath = (organizationId: string) =>
-  `/organization/${organizationId}/subscription`;
