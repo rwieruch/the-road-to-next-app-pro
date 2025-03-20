@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Separator } from "@/components/ui/separator";
 import { Attachments } from "@/features/attachments/components/attachments";
-import { Comments } from "@/features/comment/components/comments";
+import { Comments } from "@/features/comment/components/comments/comments";
 import { getComments } from "@/features/comment/queries/get-comments";
 import { ReferencedTickets } from "@/features/ticket/components/referenced-tickets";
 import { TicketItem } from "@/features/ticket/components/ticket-item";
