@@ -47,23 +47,21 @@ const Comments = ({ ticketId, paginatedComments }: CommentsProps) => {
         }
       />
       <div className="flex flex-col gap-y-2 ml-8">
-        {comments.map((comment) => (
-          <CommentItem
-            key={comment.id}
-            comment={comment}
-            buttons={[
-              ...(comment.isOwner
-                ? [
-                    <CommentDeleteButton
-                      key="0"
-                      id={comment.id}
-                      onDeleteComment={onDeleteComment}
-                    />,
-                  ]
-                : []),
-            ]}
-          />
-        ))}
+        {comments.map((comment) => {
+          const commentDeleteButton = (
+            <CommentDeleteButton
+              key="0"
+              id={comment.id}
+              onDeleteComment={onDeleteComment}
+            />
+          );
+
+          const buttons = [...(comment.isOwner ? [commentDeleteButton] : [])];
+
+          return (
+            <CommentItem key={comment.id} comment={comment} buttons={buttons} />
+          );
+        })}
 
         {isFetchingNextPage && (
           <>
