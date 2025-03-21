@@ -1,5 +1,4 @@
-import { AttachmentDeleteButton } from "@/features/attachment/components/attachment-delete-button";
-import { AttachmentList } from "@/features/attachment/components/attachment-list";
+import { AttachmentCreateButton } from "@/features/attachments/components/attachment-create-button";
 import { CommentWithMetadata } from "../types";
 import { CommentDeleteButton } from "./comment-delete-button";
 import { CommentItem } from "./comment-item";
@@ -19,15 +18,27 @@ const CommentList = ({
   return (
     <>
       {comments.map((comment) => {
+        const attachmentCreateButton = (
+          <AttachmentCreateButton
+            key="0"
+            entityId={comment.id}
+            entity="COMMENT"
+          />
+        );
+
         const commentDeleteButton = (
           <CommentDeleteButton
-            key="0"
+            key="1"
             id={comment.id}
             onDeleteComment={onDeleteComment}
           />
         );
 
-        const buttons = [...(comment.isOwner ? [commentDeleteButton] : [])];
+        const buttons = [
+          ...(comment.isOwner
+            ? [attachmentCreateButton, commentDeleteButton]
+            : []),
+        ];
 
         const sections = [];
 
