@@ -25,7 +25,7 @@ const CommentItem = ({ comment, sections, buttons }: CommentItemProps) => {
             {format(comment.createdAt, "yyyy-MM-dd, HH:mm")}
           </p>
         </div>
-        <Content>{comment.content}</Content>
+        <p className="whitespace-pre-line">{comment.content}</p>
 
         {sections.map((section) => (
           <div key={section.label} className="space-y-2 mt-2">

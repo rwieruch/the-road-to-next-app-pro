@@ -1,4 +1,6 @@
 import { AttachmentCreateButton } from "@/features/attachments/components/attachment-create-button";
+import { AttachmentDeleteButton } from "@/features/attachments/components/attachment-delete-button";
+import { AttachmentList } from "@/features/attachments/components/attachment-list";
 import { CommentWithMetadata } from "../types";
 import { CommentDeleteButton } from "./comment-delete-button";
 import { CommentItem } from "./comment-item";
@@ -42,7 +44,7 @@ const CommentList = ({
 
         const sections = [];
 
-        if (comment.attachments?.length) {
+        if (comment.attachments.length) {
           sections.push({
             label: "Attachments",
             content: (
@@ -50,15 +52,7 @@ const CommentList = ({
                 attachments={comment.attachments}
                 buttons={(attachmentId) => [
                   ...(comment.isOwner
-                    ? [
-                        <AttachmentDeleteButton
-                          key="0"
-                          id={attachmentId}
-                          onDeleteAttachment={(attachmentId) =>
-                            onDeleteAttachment?.(comment.id, attachmentId)
-                          }
-                        />,
-                      ]
+                    ? [<AttachmentDeleteButton key="0" id={attachmentId} />]
                     : []),
                 ]}
               />
