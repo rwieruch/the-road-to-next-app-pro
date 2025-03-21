@@ -9,12 +9,13 @@ type CommentListProps = {
   comments: CommentWithMetadata[];
   onDeleteComment: (id: string) => void;
   onCreateAttachment?: () => void;
-  onDeleteAttachment?: (commentId: string, attachmentId: string) => void;
+  onDeleteAttachment?: (id: string) => void;
 };
 
 const CommentList = ({
   comments,
   onDeleteComment,
+  onCreateAttachment,
   onDeleteAttachment,
 }: CommentListProps) => {
   return (
@@ -25,6 +26,7 @@ const CommentList = ({
             key="0"
             entityId={comment.id}
             entity="COMMENT"
+            onCreateAttachment={onCreateAttachment}
           />
         );
 
@@ -52,7 +54,13 @@ const CommentList = ({
                 attachments={comment.attachments}
                 buttons={(attachmentId) => [
                   ...(comment.isOwner
-                    ? [<AttachmentDeleteButton key="0" id={attachmentId} />]
+                    ? [
+                        <AttachmentDeleteButton
+                          key="0"
+                          id={attachmentId}
+                          onDeleteAttachment={onDeleteAttachment}
+                        />,
+                      ]
                     : []),
                 ]}
               />
