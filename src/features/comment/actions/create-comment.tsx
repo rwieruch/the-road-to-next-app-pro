@@ -7,9 +7,7 @@ import {
   fromErrorToActionState,
   toActionState,
 } from "@/components/form/utils/to-action-state";
-import { AttachmentSubjectDTO } from "@/features/attachment/dto/attachment-subject-dto";
-import { filesSchema } from "@/features/attachment/schema/files";
-import * as attachmentService from "@/features/attachment/service";
+import { filesSchema } from "@/features/attachments/schema/files";
 import { getAuthOrRedirect } from "@/features/auth/queries/get-auth-or-redirect";
 import * as commentData from "@/features/comment/data";
 import * as ticketData from "@/features/ticket/data";
