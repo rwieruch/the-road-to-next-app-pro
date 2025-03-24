@@ -7,12 +7,14 @@ import {
   fromErrorToActionState,
   toActionState,
 } from "@/components/form/utils/to-action-state";
+import { filesSchema } from "@/features/attachments/schema/files";
 import { getAuthOrRedirect } from "@/features/auth/queries/get-auth-or-redirect";
 import { prisma } from "@/lib/prisma";
 import { ticketPath } from "@/paths";
 
 const createCommentSchema = z.object({
   content: z.string().min(1).max(1024),
+  files: filesSchema,
 });
 
 export const createComment = async (
