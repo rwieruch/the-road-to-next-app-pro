@@ -15,6 +15,7 @@ import { s3 } from "@/lib/aws";
 import { prisma } from "@/lib/prisma";
 import { ticketPath } from "@/paths";
 import { ACCEPTED, MAX_SIZE } from "../constants";
+import * as attachmentService from "../service/get-attachment-subject";
 import { isComment, isTicket } from "../types";
 import { getOrganizationIdByAttachment } from "../utils/attachment-helpers";
 import { generateS3Key } from "../utils/generate-s3-key";
@@ -48,31 +49,10 @@ export const createAttachments = async (
 ) => {
   const { user } = await getAuthOrRedirect();
 
-  let subject;
-
-  switch (entity) {
-    case "TICKET": {
-      subject = await prisma.ticket.findUnique({
-        where: {
-          id: entityId,
-        },
-      });
-      break;
-    }
-    case "COMMENT": {
-      subject = await prisma.comment.findUnique({
-        where: {
-          id: entityId,
-        },
-        include: {
-          ticket: true,
-        },
-      });
-      break;
-    }
-    default:
-      return toActionState("ERROR", "Subject not found");
-  }
+  const subject = await attachmentService.getAttachmentSubject(
+    entityId,
+    entity
+  );
 
   if (!subject) {
     return toActionState("ERROR", "Subject not found");
