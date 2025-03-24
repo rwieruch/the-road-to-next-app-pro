@@ -8,6 +8,7 @@ import {
   toActionState,
 } from "@/components/form/utils/to-action-state";
 import { filesSchema } from "@/features/attachments/schema/files";
+import * as attachmentService from "@/features/attachments/service";
 import { getAuthOrRedirect } from "@/features/auth/queries/get-auth-or-redirect";
 import * as commentData from "@/features/comment/data";
 import * as ticketData from "@/features/ticket/data";
@@ -34,29 +35,24 @@ export const createComment = async (
       files: formData.getAll("files"),
     });
 
-    comment = await commentData.createComment({
-      userId: user.id,
-      ticketId,
-      content,
+    comment = await prisma.comment.create({
+      data: {
+        userId: user.id,
+        ticketId: ticketId,
+        content,
+      },
+      include: {
+        user: true,
+        ticket: true,
+      },
     });
 
-    const subject = AttachmentSubjectDTO.fromComment(comment, user.id);
-
-    if (!subject) {
-      return toActionState("ERROR", "Comment not created");
-    }
-
     await attachmentService.createAttachments({
-      subject: subject,
+      subject: comment,
       entity: "COMMENT",
       entityId: comment.id,
       files,
     });
-
-    await ticketData.connectReferencedTickets(
-      ticketId,
-      findTicketIdsFromText("tickets", content)
-    );
   } catch (error) {
     return fromErrorToActionState(error);
   }
