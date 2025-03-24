@@ -1,6 +1,5 @@
 "use server";
 
-import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { AttachmentEntity } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
@@ -11,14 +10,10 @@ import {
 } from "@/components/form/utils/to-action-state";
 import { getAuthOrRedirect } from "@/features/auth/queries/get-auth-or-redirect";
 import { isOwner } from "@/features/auth/utils/is-owner";
-import { s3 } from "@/lib/aws";
-import { prisma } from "@/lib/prisma";
 import { ticketPath } from "@/paths";
 import { ACCEPTED, MAX_SIZE } from "../constants";
-import * as attachmentService from "../service/get-attachment-subject";
+import * as attachmentService from "../service";
 import { isComment, isTicket } from "../types";
-import { getOrganizationIdByAttachment } from "../utils/attachment-helpers";
-import { generateS3Key } from "../utils/generate-s3-key";
 import { sizeInMB } from "../utils/size";
 
 const createAttachmentsSchema = z.object({
@@ -67,35 +62,12 @@ export const createAttachments = async (
       files: formData.getAll("files"),
     });
 
-    for (const file of files) {
-      const buffer = await Buffer.from(await file.arrayBuffer());
-
-      const attachment = await prisma.attachment.create({
-        data: {
-          name: file.name,
-          ...(entity === "TICKET" ? { ticketId: entityId } : {}),
-          ...(entity === "COMMENT" ? { commentId: entityId } : {}),
-          entity,
-        },
-      });
-
-      const organizationId = getOrganizationIdByAttachment(entity, subject);
-
-      await s3.send(
-        new PutObjectCommand({
-          Bucket: process.env.AWS_BUCKET_NAME,
-          Key: generateS3Key({
-            organizationId,
-            entityId,
-            entity,
-            fileName: file.name,
-            attachmentId: attachment.id,
-          }),
-          Body: buffer,
-          ContentType: file.type,
-        })
-      );
-    }
+    await attachmentService.createAttachments({
+      subject,
+      entity,
+      entityId,
+      files,
+    });
   } catch (error) {
     return fromErrorToActionState(error);
   }
