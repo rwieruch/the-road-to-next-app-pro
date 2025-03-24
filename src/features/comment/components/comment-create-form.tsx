@@ -10,7 +10,7 @@ import {
 } from "@/components/form/utils/to-action-state";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { ACCEPTED } from "@/features/attachment/constants";
+import { ACCEPTED } from "@/features/attachments/constants";
 import { createComment } from "../actions/create-comment";
 import { CommentWithMetadata } from "../types";
 
