@@ -13,11 +13,7 @@ export type ActionState<T = any> =
   | null
   | undefined;
 
-export const EMPTY_ACTION_STATE: ActionState = {
-  message: "",
-  fieldErrors: {},
-  timestamp: Date.now(),
-};
+export const EMPTY_ACTION_STATE: ActionState = null;
 
 export const fromErrorToActionState = (
   error: unknown,
