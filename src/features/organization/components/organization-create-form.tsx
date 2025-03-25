@@ -19,7 +19,7 @@ const OrganizationCreateForm = () => {
       <Input
         name="name"
         placeholder="Name"
-        defaultValue={actionState.payload?.get("name") as string}
+        defaultValue={actionState?.payload?.get("name") as string}
       />
       <FieldError actionState={actionState} name="name" />
 
