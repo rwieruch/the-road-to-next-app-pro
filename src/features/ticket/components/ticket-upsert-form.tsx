@@ -6,8 +6,9 @@ import {
   DatePicker,
   ImperativeHandleFromDatePicker,
 } from "@/components/date-picker";
+import { createToastCallbacks } from "@/components/form/callbacks/toast-callbacks";
+import { withCallbacks } from "@/components/form/callbacks/with-callbacks";
 import { FieldError } from "@/components/form/field-error";
-import { Form } from "@/components/form/form";
 import { SubmitButton } from "@/components/form/submit-button";
 import { EMPTY_ACTION_STATE } from "@/components/form/utils/to-action-state";
 import { Input } from "@/components/ui/input";
@@ -16,25 +17,36 @@ import { Textarea } from "@/components/ui/textarea";
 import { fromCent } from "@/utils/currency";
 import { upsertTicket } from "../actions/upsert-ticket";
 
+const useTicketUpsert = (
+  ticket: Ticket | undefined,
+  options: { onSuccess: () => void }
+) => {
+  return useActionState(
+    withCallbacks(
+      upsertTicket.bind(null, ticket?.id),
+      createToastCallbacks({
+        loadingMessage: ticket ? "Editing ticket..." : "Creating ticket...",
+        onSuccess: options.onSuccess,
+      })
+    ),
+    EMPTY_ACTION_STATE
+  );
+};
+
 type TicketUpsertFormProps = {
   ticket?: Ticket;
 };
 
 const TicketUpsertForm = ({ ticket }: TicketUpsertFormProps) => {
-  const [actionState, action] = useActionState(
-    upsertTicket.bind(null, ticket?.id),
-    EMPTY_ACTION_STATE
-  );
-
   const datePickerImperativeHandleRef =
     useRef<ImperativeHandleFromDatePicker>(null);
 
-  const handleSuccess = () => {
-    datePickerImperativeHandleRef.current?.reset();
-  };
+  const [actionState, action] = useTicketUpsert(ticket, {
+    onSuccess: () => datePickerImperativeHandleRef.current?.reset(),
+  });
 
   return (
-    <Form action={action} actionState={actionState} onSuccess={handleSuccess}>
+    <form action={action} className="flex flex-col gap-y-2">
       <Label htmlFor="title">Title</Label>
       <Input
         id="title"
@@ -87,7 +99,7 @@ const TicketUpsertForm = ({ ticket }: TicketUpsertFormProps) => {
       </div>
 
       <SubmitButton label={ticket ? "Edit" : "Create"} />
-    </Form>
+    </form>
   );
 };
 
