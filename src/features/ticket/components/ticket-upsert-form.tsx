@@ -17,22 +17,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { fromCent } from "@/utils/currency";
 import { upsertTicket } from "../actions/upsert-ticket";
 
-const useTicketUpsert = (
-  ticket: Ticket | undefined,
-  options: { onSuccess: () => void }
-) => {
-  return useActionState(
-    withCallbacks(
-      upsertTicket.bind(null, ticket?.id),
-      createToastCallbacks({
-        loadingMessage: ticket ? "Editing ticket..." : "Creating ticket...",
-        onSuccess: options.onSuccess,
-      })
-    ),
-    EMPTY_ACTION_STATE
-  );
-};
-
 type TicketUpsertFormProps = {
   ticket?: Ticket;
 };
@@ -41,9 +25,16 @@ const TicketUpsertForm = ({ ticket }: TicketUpsertFormProps) => {
   const datePickerImperativeHandleRef =
     useRef<ImperativeHandleFromDatePicker>(null);
 
-  const [actionState, action] = useTicketUpsert(ticket, {
-    onSuccess: () => datePickerImperativeHandleRef.current?.reset(),
-  });
+  const [actionState, action] = useActionState(
+    withCallbacks(
+      upsertTicket.bind(null, ticket?.id),
+      createToastCallbacks({
+        loadingMessage: ticket ? "Editing ticket..." : "Creating ticket...",
+        onSuccess: () => datePickerImperativeHandleRef.current?.reset(),
+      })
+    ),
+    EMPTY_ACTION_STATE
+  );
 
   return (
     <form action={action} className="flex flex-col gap-y-2">
