@@ -1,11 +1,4 @@
-import {
-  cloneElement,
-  useActionState,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import { toast } from "sonner";
+import { cloneElement, useActionState, useState } from "react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -16,16 +9,16 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { useActionFeedback } from "./form/hooks/use-action-feedback";
+import { Form } from "./form/form";
+import { SubmitButton } from "./form/submit-button";
 import { ActionState, EMPTY_ACTION_STATE } from "./form/utils/to-action-state";
-import { Button } from "./ui/button";
 
 type UseConfirmDialogArgs = {
   title?: string;
   description?: string;
   action: () => Promise<ActionState | undefined>;
   trigger: React.ReactElement | ((isLoading: boolean) => React.ReactElement);
-  onSuccess?: (actionState: ActionState) => void;
+  onSuccess?: (actionState: ActionState) => void; // TODO
 };
 
 const useConfirmDialog = ({
@@ -33,7 +26,6 @@ const useConfirmDialog = ({
   description = "This action cannot be undone. Make sure you understand the consequences.",
   action,
   trigger,
-  onSuccess,
 }: UseConfirmDialogArgs) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -49,37 +41,6 @@ const useConfirmDialog = ({
     }
   );
 
-  const toastRef = useRef<string | number | null>(null);
-
-  useEffect(() => {
-    if (isPending) {
-      toastRef.current = toast.loading("Deleting ...");
-    } else if (toastRef.current) {
-      toast.dismiss(toastRef.current);
-    }
-
-    return () => {
-      if (toastRef.current) {
-        toast.dismiss(toastRef.current);
-      }
-    };
-  }, [isPending]);
-
-  useActionFeedback(actionState, {
-    onSuccess: ({ actionState }) => {
-      if (actionState?.message) {
-        toast.success(actionState?.message);
-      }
-
-      onSuccess?.(actionState);
-    },
-    onError: ({ actionState }) => {
-      if (actionState?.message) {
-        toast.error(actionState?.message);
-      }
-    },
-  });
-
   const dialog = (
     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
       <AlertDialogContent>
@@ -90,9 +51,9 @@ const useConfirmDialog = ({
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction asChild>
-            <form action={formAction}>
-              <Button type="submit">Confirm</Button>
-            </form>
+            <Form action={formAction} actionState={actionState}>
+              <SubmitButton label="Confirm" />
+            </Form>
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
