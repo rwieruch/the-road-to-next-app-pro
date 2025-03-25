@@ -39,10 +39,10 @@ const MembershipMoreMenu = ({
 
     const result = await promise;
 
-    if (result.status === "ERROR") {
-      toast.error(result.message);
+    if (result?.status === "ERROR") {
+      toast.error(result?.message);
     } else {
-      toast.success(result.message);
+      toast.success(result?.message);
     }
   };
 

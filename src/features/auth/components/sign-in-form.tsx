@@ -16,7 +16,7 @@ const SignInForm = () => {
       <Input
         name="email"
         placeholder="Email"
-        defaultValue={actionState.payload?.get("email") as string}
+        defaultValue={actionState?.payload?.get("email") as string}
       />
       <FieldError actionState={actionState} name="email" />
 
@@ -24,7 +24,7 @@ const SignInForm = () => {
         type="password"
         name="password"
         placeholder="Password"
-        defaultValue={actionState.payload?.get("password") as string}
+        defaultValue={actionState?.payload?.get("password") as string}
       />
       <FieldError actionState={actionState} name="password" />
 

@@ -31,7 +31,7 @@ const CommentCreateForm = ({
   const handleSuccess = (
     actionState: ActionState<CommentWithMetadata | undefined>
   ) => {
-    onCreateComment?.(actionState.data);
+    onCreateComment?.(actionState?.data);
   };
 
   return (

@@ -41,7 +41,7 @@ const TicketUpsertForm = ({ ticket }: TicketUpsertFormProps) => {
         name="title"
         type="text"
         defaultValue={
-          (actionState.payload?.get("title") as string) ?? ticket?.title
+          (actionState?.payload?.get("title") as string) ?? ticket?.title
         }
       />
       <FieldError actionState={actionState} name="title" />
@@ -51,7 +51,7 @@ const TicketUpsertForm = ({ ticket }: TicketUpsertFormProps) => {
         id="content"
         name="content"
         defaultValue={
-          (actionState.payload?.get("content") as string) ?? ticket?.content
+          (actionState?.payload?.get("content") as string) ?? ticket?.content
         }
       />
       <FieldError actionState={actionState} name="content" />
@@ -63,7 +63,7 @@ const TicketUpsertForm = ({ ticket }: TicketUpsertFormProps) => {
             id="deadline"
             name="deadline"
             defaultValue={
-              (actionState.payload?.get("deadline") as string) ??
+              (actionState?.payload?.get("deadline") as string) ??
               ticket?.deadline
             }
             imperativeHandleRef={datePickerImperativeHandleRef}
@@ -78,7 +78,7 @@ const TicketUpsertForm = ({ ticket }: TicketUpsertFormProps) => {
             type="number"
             step=".01"
             defaultValue={
-              (actionState.payload?.get("bounty") as string) ??
+              (actionState?.payload?.get("bounty") as string) ??
               (ticket?.bounty ? fromCent(ticket?.bounty) : "")
             }
           />

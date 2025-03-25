@@ -21,15 +21,15 @@ const useActionFeedback = (
     if (!isUpdate) return;
     if (!actionState) return;
 
-    if (actionState.status === "SUCCESS") {
+    if (actionState?.status === "SUCCESS") {
       options.onSuccess?.({ actionState });
     }
 
-    if (actionState.status === "ERROR") {
+    if (actionState?.status === "ERROR") {
       options.onError?.({ actionState });
     }
 
-    prevTimestamp.current = actionState.timestamp;
+    prevTimestamp.current = actionState?.timestamp;
   }, [isUpdate, actionState, options]);
 };
 

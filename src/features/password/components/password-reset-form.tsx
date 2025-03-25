@@ -24,7 +24,7 @@ const PasswordResetForm = ({ tokenId }: PasswordResetFormProps) => {
         type="password"
         name="password"
         placeholder="Password"
-        defaultValue={actionState.payload?.get("password") as string}
+        defaultValue={actionState?.payload?.get("password") as string}
       />
       <FieldError actionState={actionState} name="password" />
 
@@ -32,7 +32,7 @@ const PasswordResetForm = ({ tokenId }: PasswordResetFormProps) => {
         type="password"
         name="confirmPassword"
         placeholder="Confirm Password"
-        defaultValue={actionState.payload?.get("confirmPassword") as string}
+        defaultValue={actionState?.payload?.get("confirmPassword") as string}
       />
       <FieldError actionState={actionState} name="confirmPassword" />
 
