@@ -10,14 +10,14 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { createToastCallbacks } from "./form/callbacks/toast-callbacks";
-import { withCallbacks } from "./form/callbacks/with-callbacks";
+import { useCallbacks } from "./form/callbacks/use-callbacks";
 import { ActionState, EMPTY_ACTION_STATE } from "./form/utils/to-action-state";
 import { Button } from "./ui/button";
 
 type UseConfirmDialogArgs = {
   title?: string;
   description?: string;
-  loadingMessage?: string;
+  loading?: string;
   action: () => Promise<ActionState | undefined>;
   trigger: React.ReactElement | ((isLoading: boolean) => React.ReactElement);
   onSuccess?: (actionState: ActionState | undefined) => void;
@@ -26,7 +26,7 @@ type UseConfirmDialogArgs = {
 const useConfirmDialog = ({
   title = "Are you absolutely sure?",
   description = "This action cannot be undone. Make sure you understand the consequences.",
-  loadingMessage = "Loading ...",
+  loading = "Loading ...",
   action,
   trigger,
   onSuccess,
@@ -34,10 +34,10 @@ const useConfirmDialog = ({
   const [isOpen, setIsOpen] = useState(false);
 
   const [, formAction, isPending] = useActionState(
-    withCallbacks(
+    useCallbacks(
       action,
       createToastCallbacks({
-        loadingMessage,
+        loading,
         onSuccess,
       })
     ),

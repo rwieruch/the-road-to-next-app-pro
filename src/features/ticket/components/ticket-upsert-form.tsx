@@ -7,7 +7,7 @@ import {
   ImperativeHandleFromDatePicker,
 } from "@/components/date-picker";
 import { createToastCallbacks } from "@/components/form/callbacks/toast-callbacks";
-import { withCallbacks } from "@/components/form/callbacks/with-callbacks";
+import { useCallbacks } from "@/components/form/callbacks/use-callbacks";
 import { FieldError } from "@/components/form/field-error";
 import { SubmitButton } from "@/components/form/submit-button";
 import { EMPTY_ACTION_STATE } from "@/components/form/utils/to-action-state";
@@ -26,10 +26,10 @@ const TicketUpsertForm = ({ ticket }: TicketUpsertFormProps) => {
     useRef<ImperativeHandleFromDatePicker>(null);
 
   const [actionState, action] = useActionState(
-    withCallbacks(
+    useCallbacks(
       upsertTicket.bind(null, ticket?.id),
       createToastCallbacks({
-        loadingMessage: ticket ? "Editing ticket..." : "Creating ticket...",
+        loading: ticket ? "Updating ticket..." : "Creating ticket...",
         onSuccess: () => datePickerImperativeHandleRef.current?.reset(),
       })
     ),

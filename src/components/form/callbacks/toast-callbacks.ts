@@ -4,15 +4,16 @@ import { ActionState } from "../utils/to-action-state";
 type Reference = string | number | undefined;
 
 type CreateToastCallbacksOptions = {
-  loadingMessage?: string;
+  loading?: string;
   onSuccess?: (actionState: ActionState) => void;
   onError?: (actionState: ActionState) => void;
+  onCleanup?: (reference: Reference) => void;
 };
 
 export const createToastCallbacks = (options: CreateToastCallbacksOptions) => {
   return {
     onLoad: () => {
-      return toast.loading(options.loadingMessage || "Loading ...");
+      return toast.loading(options.loading || "Loading ...");
     },
     onSuccess: (result: ActionState, reference: Reference) => {
       if (result?.message) {
@@ -34,6 +35,15 @@ export const createToastCallbacks = (options: CreateToastCallbacksOptions) => {
 
       if (options.onError) {
         options.onError(result);
+      }
+    },
+    onCleanup: (reference: Reference) => {
+      if (reference) {
+        toast.dismiss(reference);
+      }
+
+      if (options.onCleanup) {
+        options.onCleanup(reference);
       }
     },
   };
