@@ -20,7 +20,7 @@ const PasswordChangeForm = () => {
         type="password"
         name="password"
         placeholder="Password"
-        defaultValue={actionState.payload?.get("password") as string}
+        defaultValue={actionState?.payload?.get("password") as string}
       />
       <FieldError actionState={actionState} name="password" />
 

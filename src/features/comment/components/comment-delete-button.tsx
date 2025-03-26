@@ -16,6 +16,7 @@ const CommentDeleteButton = ({
 }: CommentDeleteButtonProps) => {
   const [deleteButton, deleteDialog] = useConfirmDialog({
     action: deleteComment.bind(null, id),
+    loading: "Deleting comment...",
     trigger: (isPending) => (
       <Button variant="outline" size="icon">
         {isPending ? (

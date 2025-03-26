@@ -26,6 +26,7 @@ type TicketMoreMenuProps = {
 const TicketMoreMenu = ({ ticket, trigger }: TicketMoreMenuProps) => {
   const [deleteButton, deleteDialog] = useConfirmDialog({
     action: deleteTicket.bind(null, ticket.id),
+    loading: "Deleting ticket...",
     trigger: (
       <DropdownMenuItem disabled={!ticket.permissions.canDeleteTicket}>
         <LucideTrash className="h-4 w-4" />
@@ -43,10 +44,10 @@ const TicketMoreMenu = ({ ticket, trigger }: TicketMoreMenuProps) => {
 
     const result = await promise;
 
-    if (result.status === "ERROR") {
-      toast.error(result.message);
-    } else if (result.status === "SUCCESS") {
-      toast.success(result.message);
+    if (result?.status === "ERROR") {
+      toast.error(result?.message);
+    } else if (result?.status === "SUCCESS") {
+      toast.success(result?.message);
     }
   };
 

@@ -1,5 +1,3 @@
-import { toast } from "sonner";
-import { useActionFeedback } from "./hooks/use-action-feedback";
 import { ActionState } from "./utils/to-action-state";
 
 type FormProps = {
@@ -10,30 +8,10 @@ type FormProps = {
   onError?: (actionState: ActionState) => void;
 };
 
-const Form = ({
-  action,
-  actionState,
-  children,
-  onSuccess,
-  onError,
-}: FormProps) => {
-  useActionFeedback(actionState, {
-    onSuccess: ({ actionState }) => {
-      if (actionState.message) {
-        toast.success(actionState.message);
-      }
+// TODO: replace <Form ... > everywhere with <form action={action} className="flex flex-col gap-y-2">
+// TODO: then use useCallbacks hook on the action instead
 
-      onSuccess?.(actionState);
-    },
-    onError: ({ actionState }) => {
-      if (actionState.message) {
-        toast.error(actionState.message);
-      }
-
-      onError?.(actionState);
-    },
-  });
-
+const Form = ({ action, children }: FormProps) => {
   return (
     <form action={action} className="flex flex-col gap-y-2">
       {children}

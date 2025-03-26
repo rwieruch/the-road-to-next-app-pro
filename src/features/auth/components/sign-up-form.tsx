@@ -16,14 +16,14 @@ const SignUpForm = () => {
       <Input
         name="username"
         placeholder="Username"
-        defaultValue={actionState.payload?.get("username") as string}
+        defaultValue={actionState?.payload?.get("username") as string}
       />
       <FieldError actionState={actionState} name="username" />
 
       <Input
         name="email"
         placeholder="Email"
-        defaultValue={actionState.payload?.get("email") as string}
+        defaultValue={actionState?.payload?.get("email") as string}
       />
       <FieldError actionState={actionState} name="email" />
 
@@ -31,7 +31,7 @@ const SignUpForm = () => {
         type="password"
         name="password"
         placeholder="Password"
-        defaultValue={actionState.payload?.get("password") as string}
+        defaultValue={actionState?.payload?.get("password") as string}
       />
       <FieldError actionState={actionState} name="password" />
 
@@ -39,7 +39,7 @@ const SignUpForm = () => {
         type="password"
         name="confirmPassword"
         placeholder="Confirm Password"
-        defaultValue={actionState.payload?.get("confirmPassword") as string}
+        defaultValue={actionState?.payload?.get("confirmPassword") as string}
       />
       <FieldError actionState={actionState} name="confirmPassword" />
 

@@ -6,8 +6,9 @@ import {
   DatePicker,
   ImperativeHandleFromDatePicker,
 } from "@/components/date-picker";
+import { createToastCallbacks } from "@/components/form/callbacks/toast-callbacks";
+import { useCallbacks } from "@/components/form/callbacks/use-callbacks";
 import { FieldError } from "@/components/form/field-error";
-import { Form } from "@/components/form/form";
 import { SubmitButton } from "@/components/form/submit-button";
 import { EMPTY_ACTION_STATE } from "@/components/form/utils/to-action-state";
 import { Input } from "@/components/ui/input";
@@ -21,27 +22,29 @@ type TicketUpsertFormProps = {
 };
 
 const TicketUpsertForm = ({ ticket }: TicketUpsertFormProps) => {
-  const [actionState, action] = useActionState(
-    upsertTicket.bind(null, ticket?.id),
-    EMPTY_ACTION_STATE
-  );
-
   const datePickerImperativeHandleRef =
     useRef<ImperativeHandleFromDatePicker>(null);
 
-  const handleSuccess = () => {
-    datePickerImperativeHandleRef.current?.reset();
-  };
+  const [actionState, action] = useActionState(
+    useCallbacks(
+      upsertTicket.bind(null, ticket?.id),
+      createToastCallbacks({
+        loading: ticket ? "Updating ticket..." : "Creating ticket...",
+        onSuccess: () => datePickerImperativeHandleRef.current?.reset(),
+      })
+    ),
+    EMPTY_ACTION_STATE
+  );
 
   return (
-    <Form action={action} actionState={actionState} onSuccess={handleSuccess}>
+    <form action={action} className="flex flex-col gap-y-2">
       <Label htmlFor="title">Title</Label>
       <Input
         id="title"
         name="title"
         type="text"
         defaultValue={
-          (actionState.payload?.get("title") as string) ?? ticket?.title
+          (actionState?.payload?.get("title") as string) ?? ticket?.title
         }
       />
       <FieldError actionState={actionState} name="title" />
@@ -51,7 +54,7 @@ const TicketUpsertForm = ({ ticket }: TicketUpsertFormProps) => {
         id="content"
         name="content"
         defaultValue={
-          (actionState.payload?.get("content") as string) ?? ticket?.content
+          (actionState?.payload?.get("content") as string) ?? ticket?.content
         }
       />
       <FieldError actionState={actionState} name="content" />
@@ -63,7 +66,7 @@ const TicketUpsertForm = ({ ticket }: TicketUpsertFormProps) => {
             id="deadline"
             name="deadline"
             defaultValue={
-              (actionState.payload?.get("deadline") as string) ??
+              (actionState?.payload?.get("deadline") as string) ??
               ticket?.deadline
             }
             imperativeHandleRef={datePickerImperativeHandleRef}
@@ -78,7 +81,7 @@ const TicketUpsertForm = ({ ticket }: TicketUpsertFormProps) => {
             type="number"
             step=".01"
             defaultValue={
-              (actionState.payload?.get("bounty") as string) ??
+              (actionState?.payload?.get("bounty") as string) ??
               (ticket?.bounty ? fromCent(ticket?.bounty) : "")
             }
           />
@@ -87,7 +90,7 @@ const TicketUpsertForm = ({ ticket }: TicketUpsertFormProps) => {
       </div>
 
       <SubmitButton label={ticket ? "Edit" : "Create"} />
-    </Form>
+    </form>
   );
 };
 
