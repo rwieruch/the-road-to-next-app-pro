@@ -1,8 +1,9 @@
 "use client";
 
 import { useActionState } from "react";
+import { createToastCallbacks } from "@/components/form/callbacks/toast-callbacks";
+import { useCallbacks } from "@/components/form/callbacks/use-callbacks";
 import { FieldError } from "@/components/form/field-error";
-import { Form } from "@/components/form/form";
 import { SubmitButton } from "@/components/form/submit-button";
 import {
   ActionState,
@@ -23,19 +24,25 @@ const CommentCreateForm = ({
   ticketId,
   onCreateComment,
 }: CommentCreateFormProps) => {
-  const [actionState, action] = useActionState(
-    createComment.bind(null, ticketId),
-    EMPTY_ACTION_STATE
-  );
-
   const handleSuccess = (
     actionState: ActionState<CommentWithMetadata | undefined>
   ) => {
     onCreateComment?.(actionState?.data);
   };
 
+  const [actionState, action] = useActionState(
+    useCallbacks(
+      createComment.bind(null, ticketId),
+      createToastCallbacks({
+        loading: "Creating comment...",
+        onSuccess: handleSuccess,
+      })
+    ),
+    EMPTY_ACTION_STATE
+  );
+
   return (
-    <Form action={action} actionState={actionState} onSuccess={handleSuccess}>
+    <form action={action} className="flex flex-col gap-y-2">
       <Textarea name="content" placeholder="What's on your mind ..." />
       <FieldError actionState={actionState} name="content" />
 
@@ -49,7 +56,7 @@ const CommentCreateForm = ({
       <FieldError actionState={actionState} name="files" />
 
       <SubmitButton label="Comment" />
-    </Form>
+    </form>
   );
 };
 
