@@ -7,7 +7,6 @@ export type ActionState<T = any> =
       message: string;
       payload?: FormData;
       fieldErrors: Record<string, string[] | undefined>;
-      timestamp: number;
       data?: T;
     }
   | null
@@ -25,7 +24,6 @@ export const fromErrorToActionState = (
       message: "",
       payload: formData,
       fieldErrors: error.flatten().fieldErrors,
-      timestamp: Date.now(),
     };
   } else if (error instanceof Error) {
     return {
@@ -33,7 +31,6 @@ export const fromErrorToActionState = (
       message: error.message,
       payload: formData,
       fieldErrors: {},
-      timestamp: Date.now(),
     };
   } else {
     return {
@@ -41,7 +38,6 @@ export const fromErrorToActionState = (
       message: "An unknown error occurred",
       payload: formData,
       fieldErrors: {},
-      timestamp: Date.now(),
     };
   }
 };
@@ -57,7 +53,6 @@ export const toActionState = (
     message,
     fieldErrors: {},
     payload: formData,
-    timestamp: Date.now(),
     data,
   };
 };
