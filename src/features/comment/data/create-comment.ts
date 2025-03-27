@@ -1,29 +1,25 @@
+import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 
-type CreateCommentArgs = {
+type CreateCommentArgs<T> = {
   userId: string;
   ticketId: string;
   content: string;
+  include: Prisma.Subset<T, Prisma.CommentInclude>;
 };
 
-export const createComment = async ({
+export const createComment = async <T extends Prisma.CommentInclude>({
   userId,
   ticketId,
   content,
-}: CreateCommentArgs) => {
+  include,
+}: CreateCommentArgs<T>) => {
   return await prisma.comment.create({
     data: {
       userId,
       ticketId,
       content,
     },
-    include: {
-      user: {
-        select: {
-          username: true,
-        },
-      },
-      ticket: true,
-    },
+    include,
   });
 };
