@@ -37,13 +37,9 @@ export const createComment = async (
       userId: user.id,
       ticketId,
       content,
-      include: {
-        user: {
-          select: {
-            username: true,
-          },
-        },
-        ticket: true,
+      options: {
+        includeUser: true,
+        includeTicket: true,
       },
     });
 
