@@ -13,7 +13,6 @@ import { isOwner } from "@/features/auth/utils/is-owner";
 import { ticketPath } from "@/paths";
 import { filesSchema } from "../schema/files";
 import * as attachmentService from "../service";
-import { isComment, isTicket } from "../types";
 
 const createAttachmentsSchema = z.object({
   files: filesSchema.refine((files) => files.length !== 0, "File is required"),
@@ -59,19 +58,7 @@ export const createAttachments = async (
     return fromErrorToActionState(error);
   }
 
-  switch (entity) {
-    case "TICKET":
-      if (isTicket(subject)) {
-        revalidatePath(ticketPath(subject.id));
-      }
-      break;
-    case "COMMENT": {
-      if (isComment(subject)) {
-        revalidatePath(ticketPath(subject.ticket.id));
-      }
-      break;
-    }
-  }
+  revalidatePath(ticketPath(subject.ticketId));
 
   return toActionState("SUCCESS", "Attachment(s) uploaded");
 };
