@@ -8,28 +8,25 @@ import { getAuthOrRedirect } from "@/features/auth/queries/get-auth-or-redirect"
 import { isOwner } from "@/features/auth/utils/is-owner";
 import { inngest } from "@/lib/inngest";
 import { prisma } from "@/lib/prisma";
-import { getOrganizationIdByAttachment } from "../utils/attachment-helpers";
+import * as attachmentData from "../data";
+import * as attachmentSubjectDTO from "../dto/attachment-subject-dto";
 
 export const deleteAttachment = async (id: string) => {
   const { user } = await getAuthOrRedirect();
 
-  const attachment = await prisma.attachment.findUniqueOrThrow({
-    where: {
-      id,
-    },
-    include: {
-      ticket: true,
-      comment: {
-        include: {
-          ticket: true,
-        },
-      },
-    },
-  });
+  const attachment = await attachmentData.getAttachment(id);
 
-  const subject = attachment.ticket ?? attachment.comment;
+  let subject;
+  switch (attachment?.entity) {
+    case "TICKET":
+      subject = attachmentSubjectDTO.fromTicket(attachment.ticket);
+      break;
+    case "COMMENT":
+      subject = attachmentSubjectDTO.fromComment(attachment.comment);
+      break;
+  }
 
-  if (!subject) {
+  if (!subject || !attachment) {
     return toActionState("ERROR", "Subject not found");
   }
 
@@ -44,16 +41,11 @@ export const deleteAttachment = async (id: string) => {
       },
     });
 
-    const organizationId = getOrganizationIdByAttachment(
-      attachment.entity,
-      subject
-    );
-
     await inngest.send({
       name: "app/attachment.deleted",
       data: {
-        organizationId,
-        entityId: subject.id,
+        organizationId: subject.organizationId,
+        entityId: subject.entityId,
         entity: attachment.entity,
         fileName: attachment.name,
         attachmentId: attachment.id,
