@@ -7,6 +7,7 @@ import {
   fromErrorToActionState,
   toActionState,
 } from "@/components/form/utils/to-action-state";
+import * as attachmentSubjectDTO from "@/features/attachments/dto/attachment-subject-dto";
 import { filesSchema } from "@/features/attachments/schema/files";
 import * as attachmentService from "@/features/attachments/service";
 import { getAuthOrRedirect } from "@/features/auth/queries/get-auth-or-redirect";
@@ -43,8 +44,14 @@ export const createComment = async (
       },
     });
 
+    const subject = attachmentSubjectDTO.fromComment(comment);
+
+    if (!subject) {
+      return toActionState("ERROR", "Comment not created");
+    }
+
     await attachmentService.createAttachments({
-      subject: comment,
+      subject: subject,
       entity: "COMMENT",
       entityId: comment.id,
       files,
