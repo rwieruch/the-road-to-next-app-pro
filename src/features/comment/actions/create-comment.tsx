@@ -11,7 +11,9 @@ import * as attachmentSubjectDTO from "@/features/attachments/dto/attachment-sub
 import { filesSchema } from "@/features/attachments/schema/files";
 import * as attachmentService from "@/features/attachments/service";
 import { getAuthOrRedirect } from "@/features/auth/queries/get-auth-or-redirect";
+import * as ticketData from "@/features/ticket/data";
 import { ticketPath } from "@/paths";
+import { findIdsFromText } from "@/utils/find-ids-from-text";
 import * as commentData from "../data";
 
 const createCommentSchema = z.object({
@@ -56,6 +58,11 @@ export const createComment = async (
       entityId: comment.id,
       files,
     });
+
+    await ticketData.connectReferencedTickets(
+      ticketId,
+      findIdsFromText("tickets", content)
+    );
   } catch (error) {
     return fromErrorToActionState(error);
   }
