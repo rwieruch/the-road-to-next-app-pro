@@ -108,20 +108,22 @@ model EmailVerificationToken {
 }
 
 model Ticket {
-  id             String       @id @default(cuid())
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
-  title          String
-  content        String       @db.VarChar(1024)
-  status         TicketStatus @default(OPEN)
-  deadline       String
-  bounty         Int
-  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId         String
-  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  organizationId String
-  comments       Comment[]
-  attachments    Attachment[]
+  id                 String       @id @default(cuid())
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+  title              String
+  content            String       @db.VarChar(1024)
+  status             TicketStatus @default(OPEN)
+  deadline           String
+  bounty             Int
+  user               User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId             String
+  organization       Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId     String
+  comments           Comment[]
+  attachments        Attachment[]
+  referencedTickets  Ticket[]     @relation("TicketReferences")
+  referencingTickets Ticket[]     @relation("TicketReferences")
 
   @@index([userId])
   @@index([organizationId])

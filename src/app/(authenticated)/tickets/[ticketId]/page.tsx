@@ -51,6 +51,7 @@ const TicketPage = async ({ params }: TicketPageProps) => {
               isOwner={ticket.isOwner}
             />
           }
+          referencedTickets={<ReferencedTickets ticketId={ticket.id} />}
           comments={
             <Comments
               ticketId={ticket.id}
