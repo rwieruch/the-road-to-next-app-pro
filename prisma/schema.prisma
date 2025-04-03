@@ -16,6 +16,19 @@ model Organization {
   memberships Membership[]
   tickets     Ticket[]
   invitations Invitation[]
+  credentials Credential[]
+}
+
+model Credential {
+  id             String       @id @default(cuid())
+  createdAt      DateTime     @default(now())
+  secretHash     String       @unique
+  name           String
+  lastUsed       DateTime?
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId String
+
+  @@index([organizationId])
 }
 
 model Invitation {

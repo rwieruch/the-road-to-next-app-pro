@@ -1,8 +1,4 @@
-import { Suspense } from "react";
 import { Heading } from "@/components/heading";
-import { Spinner } from "@/components/spinner";
-import { CredentialCreateButton } from "@/features/credential/components/credential-create-button";
-import { CredentialList } from "@/features/credential/components/credential-list";
 import { OrganizationBreadcrumbs } from "../_navigation/tabs";
 
 type CredentialsPageProps = {
@@ -20,12 +16,7 @@ const CredentialsPage = async ({ params }: CredentialsPageProps) => {
         title="Credentials"
         description="Manage your organization's API secrets"
         tabs={<OrganizationBreadcrumbs />}
-        actions={<CredentialCreateButton organizationId={organizationId} />}
       />
-
-      <Suspense fallback={<Spinner />}>
-        <CredentialList organizationId={organizationId} />
-      </Suspense>
     </div>
   );
 };
