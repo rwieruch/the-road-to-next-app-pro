@@ -27,6 +27,8 @@ export async function DELETE(
     return Response.json({ error: "Not authorized" }, { status: 401 });
   }
 
+  const hashedToken = hashToken(authToken);
+
   const ticket = await prisma.ticket.findUnique({
     where: {
       id: ticketId,
@@ -36,8 +38,6 @@ export async function DELETE(
   if (!ticket) {
     return Response.json({ error: "Ticket not found" }, { status: 404 });
   }
-
-  const hashedToken = hashToken(authToken);
 
   const credential = await prisma.credential.findUnique({
     where: {
