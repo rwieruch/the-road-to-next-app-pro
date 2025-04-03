@@ -1,8 +1,7 @@
 "use client";
 
 import { LucidePlus } from "lucide-react";
-import { useState } from "react";
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { FieldError } from "@/components/form/field-error";
 import { Form } from "@/components/form/form";
 import { SubmitButton } from "@/components/form/submit-button";
@@ -54,15 +53,7 @@ const CredentialCreateButton = ({
             Create a new API secret for your organization
           </DialogDescription>
         </DialogHeader>
-        <Form
-          action={action}
-          actionState={actionState}
-          onSuccess={handleClose}
-          toastOptions={{
-            duration: Infinity,
-            closeButton: true,
-          }}
-        >
+        <Form action={action} actionState={actionState} onSuccess={handleClose}>
           <div className="grid gap-4 py-4">
             <div>
               <div className="grid grid-cols-4 items-center gap-4">
