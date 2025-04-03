@@ -8,7 +8,7 @@ type FormProps = {
   children: React.ReactNode;
   onSuccess?: (actionState: ActionState) => void;
   onError?: (actionState: ActionState) => void;
-  toastOptions?: Omit<ToastT, "id">;
+  toastOptions?: Omit<ToastT, "id"> | undefined;
 };
 
 const Form = ({
