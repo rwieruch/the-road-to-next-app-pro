@@ -51,6 +51,7 @@
     "react-intersection-observer": "^9.13.1",
     "resend": "^4.0.1",
     "sonner": "^2.0.3",
+    "stripe": "^18.1.0",
     "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7",
     "use-debounce": "^10.0.4",
