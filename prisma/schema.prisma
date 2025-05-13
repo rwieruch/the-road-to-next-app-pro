@@ -9,14 +9,22 @@ datasource db {
 }
 
 model Organization {
-  id          String       @id @default(cuid())
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-  name        String
-  memberships Membership[]
-  tickets     Ticket[]
-  invitations Invitation[]
-  credentials Credential[]
+  id               String          @id @default(cuid())
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  name             String
+  memberships      Membership[]
+  tickets          Ticket[]
+  invitations      Invitation[]
+  credentials      Credential[]
+  stripeCustomerId String?
+  stripeCustomer   StripeCustomer?
+}
+
+model StripeCustomer {
+  organizationId String       @unique
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  customerId     String       @unique
 }
 
 model Credential {
