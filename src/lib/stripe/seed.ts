@@ -1,4 +1,3 @@
-// import "dotenv/config";
 import { prisma } from "../prisma";
 import { stripe } from "./";
 
@@ -40,14 +39,9 @@ const seed = async () => {
     },
   });
 
-  const testClock = await stripe.testHelpers.testClocks.create({
-    frozen_time: Math.round(new Date().getTime() / 1000),
-  });
-
   const customer = await stripe.customers.create({
     name: organization.name,
     email: organization.memberships[0].user.email,
-    test_clock: testClock.id,
   });
 
   await prisma.stripeCustomer.create({
@@ -60,15 +54,9 @@ const seed = async () => {
   const productOne = await stripe.products.create({
     name: "Business Plan",
     description: "Your business plan.",
-    metadata: {
-      allowedMembers: 999,
-    },
     marketing_features: [
       {
         name: "Cancel anytime",
-      },
-      {
-        name: "Unlimited members",
       },
     ],
   });
@@ -76,15 +64,9 @@ const seed = async () => {
   const productTwo = await stripe.products.create({
     name: "Startup Plan",
     description: "Your startup plan.",
-    metadata: {
-      allowedMembers: 3,
-    },
     marketing_features: [
       {
         name: "Cancel anytime",
-      },
-      {
-        name: "Up to 3 members",
       },
     ],
   });
