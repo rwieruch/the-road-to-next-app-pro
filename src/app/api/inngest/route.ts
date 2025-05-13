@@ -13,5 +13,6 @@ export const { GET, POST, PUT } = serve({
     emailVerificationEvent,
     invitationCreatedEvent,
     attachmentDeletedEvent,
+    organizationCreatedEvent,
   ],
 });

@@ -6,6 +6,7 @@ import { OrganizationCreateEventArgs } from "@/features/organization/events/even
 import { PasswordResetEventArgs } from "@/features/password/events/event-password-reset";
 
 type Events = {
+  "app/organization.created": OrganizationCreateEventArgs;
   "app/password.password-reset": PasswordResetEventArgs;
   "app/auth.sign-up": EmailVerificationEventArgs;
   "app/invitation.created": InvitationCreateEventArgs;
