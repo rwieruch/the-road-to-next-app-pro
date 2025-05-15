@@ -22,9 +22,24 @@ model Organization {
 }
 
 model StripeCustomer {
-  organizationId String       @unique
-  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  customerId     String       @unique
+  organizationId     String                    @unique
+  organization       Organization              @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  customerId         String                    @unique
+  subscriptionId     String?
+  subscriptionStatus StripeSubscriptionStatus?
+  productId          String?
+  priceId            String?
+}
+
+enum StripeSubscriptionStatus {
+  active
+  incomplete
+  incomplete_expired
+  past_due
+  canceled
+  unpaid
+  trialing
+  paused
 }
 
 model Credential {

@@ -1,1 +1,1 @@
-export * from "./update-stripe-customer";
+export * from "./update-subscription";

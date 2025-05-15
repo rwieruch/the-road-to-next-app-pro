@@ -1,10 +1,16 @@
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
-import { onSubscriptionCreated } from "@/features/stripe/webhooks/on-subscription-created";
-import { onSubscriptionDeleted } from "@/features/stripe/webhooks/on-subscription-deleted";
-import { onSubscriptionUpdated } from "@/features/stripe/webhooks/on-subscription-updated";
+import * as stripeData from "@/features/stripe/data";
 import { stripe } from "@/lib/stripe";
+
+const handleSubscriptionCreated = async (subscription: Stripe.Subscription) => {
+  await stripeData.updateStripeSubscription(subscription);
+};
+
+const handleSubscriptionUpdated = async (subscription: Stripe.Subscription) => {
+  await stripeData.updateStripeSubscription(subscription);
+};
 
 export async function POST(req: Request) {
   const body = await req.text();
@@ -30,13 +36,10 @@ export async function POST(req: Request) {
 
     switch (event.type) {
       case "customer.subscription.created":
-        onSubscriptionCreated(event.data.object);
+        handleSubscriptionCreated(event.data.object);
         break;
       case "customer.subscription.updated":
-        onSubscriptionUpdated(event.data.object);
-        break;
-      case "customer.subscription.deleted":
-        onSubscriptionDeleted(event.data.object);
+        handleSubscriptionUpdated(event.data.object);
         break;
       default:
         console.log(`Unhandled event type ${event.type}.`);
