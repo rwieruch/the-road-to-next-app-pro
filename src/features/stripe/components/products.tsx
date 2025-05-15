@@ -1,4 +1,4 @@
-import { LucideBadgeCheck, LucideCheck } from "lucide-react";
+import { LucideCheck } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -9,20 +9,13 @@ import {
 } from "@/components/ui/card";
 import { stripe } from "@/lib/stripe";
 import { toCurrencyFromCent } from "@/utils/currency";
-import { getStripeCustomerByOrganization } from "../queries/get-stripe-customer";
-import { CheckoutSessionForm } from "./checkout-session-form";
 
 type PricesProps = {
   organizationId: string | null | undefined;
   productId: string;
-  activePriceId: string | null | undefined;
 };
 
-const Prices = async ({
-  organizationId,
-  productId,
-  activePriceId,
-}: PricesProps) => {
+const Prices = async ({ organizationId, productId }: PricesProps) => {
   const prices = await stripe.prices.list({
     active: true,
     product: productId,
@@ -31,17 +24,12 @@ const Prices = async ({
   return (
     <div className="flex gap-x-2">
       {prices.data.map((price) => (
-        <CheckoutSessionForm
-          key={price.id}
-          organizationId={organizationId}
-          priceId={price.id}
-          activePriceId={activePriceId}
-        >
+        <button key={price.id}>
           <span className="font-bold text-lg">
             {toCurrencyFromCent(price.unit_amount || 0, price.currency)}
           </span>
           &nbsp;/&nbsp;<span>{price.recurring?.interval}</span>
-        </CheckoutSessionForm>
+        </button>
       ))}
     </div>
   );
@@ -52,13 +40,6 @@ type ProductsProps = {
 };
 
 const Products = async ({ organizationId }: ProductsProps) => {
-  const stripeCustomer = await getStripeCustomerByOrganization(organizationId);
-
-  const subscriptionStatus = stripeCustomer?.subscriptionStatus;
-  const activeSubscription = subscriptionStatus === "active";
-  const activeProductId = activeSubscription ? stripeCustomer?.productId : null;
-  const activePriceId = activeSubscription ? stripeCustomer?.priceId : null;
-
   const products = await stripe.products.list({
     active: true,
   });
@@ -68,10 +49,7 @@ const Products = async ({ organizationId }: ProductsProps) => {
       {products.data.map((product) => (
         <Card key={product.id}>
           <CardHeader>
-            <CardTitle className="flex justify-between">
-              {product.name}
-              {activeProductId === product.id ? <LucideBadgeCheck /> : null}
-            </CardTitle>
+            <CardTitle>{product.name}</CardTitle>
             <CardDescription>{product.description}</CardDescription>
           </CardHeader>
           <CardContent>
@@ -82,11 +60,7 @@ const Products = async ({ organizationId }: ProductsProps) => {
             ))}
           </CardContent>
           <CardFooter>
-            <Prices
-              organizationId={organizationId}
-              productId={product.id}
-              activePriceId={activePriceId}
-            />
+            <Prices organizationId={organizationId} productId={product.id} />
           </CardFooter>
         </Card>
       ))}

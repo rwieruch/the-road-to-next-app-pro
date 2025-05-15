@@ -1,5 +1,7 @@
 export const homePath = () => "/";
 
+export const pricingPath = () => "/pricing";
+
 export const signUpPath = () => "/sign-up";
 export const signInPath = () => "/sign-in";
 
