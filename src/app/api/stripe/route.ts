@@ -12,6 +12,10 @@ const handleSubscriptionUpdated = async (subscription: Stripe.Subscription) => {
   await stripeData.updateStripeSubscription(subscription);
 };
 
+const handleSubscriptionDeleted = async (subscription: Stripe.Subscription) => {
+  await stripeData.deleteStripeSubscription(subscription);
+};
+
 export async function POST(req: Request) {
   const body = await req.text();
   const signature = (await headers()).get("Stripe-Signature");
@@ -40,6 +44,9 @@ export async function POST(req: Request) {
         break;
       case "customer.subscription.updated":
         handleSubscriptionUpdated(event.data.object);
+        break;
+      case "customer.subscription.deleted":
+        handleSubscriptionDeleted(event.data.object);
         break;
       default:
         console.log(`Unhandled event type ${event.type}.`);
