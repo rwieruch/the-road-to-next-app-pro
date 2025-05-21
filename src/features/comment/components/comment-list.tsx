@@ -20,7 +20,7 @@ const CommentList = ({
       {comments.map((comment) => {
         const commentDeleteButton = (
           <CommentDeleteButton
-            key="1"
+            key="0"
             id={comment.id}
             onDeleteComment={onDeleteComment}
           />
