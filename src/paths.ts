@@ -1,5 +1,7 @@
 export const homePath = () => "/";
 
+export const pricingPath = () => "/pricing";
+
 export const signUpPath = () => "/sign-up";
 export const signInPath = () => "/sign-in";
 
@@ -22,6 +24,8 @@ export const invitationsPath = (organizationId: string) =>
   `/organization/${organizationId}/invitations`;
 export const credentialsPath = (organizationId: string) =>
   `/organization/${organizationId}/credentials`;
+export const subscriptionPath = (organizationId: string) =>
+  `/organization/${organizationId}/subscription`;
 
 export const accountProfilePath = () => "/account/profile";
 export const accountPasswordPath = () => "/account/password";
@@ -33,8 +37,3 @@ export const ticketEditPath = (ticketId: string) => `/tickets/${ticketId}/edit`;
 
 export const attachmentDownloadPath = (attachmentId: string) =>
   `/api/aws/s3/attachments/${attachmentId}`;
-
-export const pricingPath = () => "/pricing";
-
-export const subscriptionPath = (organizationId: string) =>
-  `/organization/${organizationId}/subscription`;

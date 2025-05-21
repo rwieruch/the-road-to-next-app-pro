@@ -13,10 +13,10 @@ model Organization {
   createdAt        DateTime        @default(now())
   updatedAt        DateTime        @updatedAt
   name             String
-  credentials      Credential[]
   memberships      Membership[]
-  invitations      Invitation[]
   tickets          Ticket[]
+  invitations      Invitation[]
+  credentials      Credential[]
   stripeCustomerId String?
   stripeCustomer   StripeCustomer?
 }
@@ -29,6 +29,7 @@ model StripeCustomer {
   subscriptionStatus StripeSubscriptionStatus?
   productId          String?
   priceId            String?
+  eventAt            Int?
 }
 
 enum StripeSubscriptionStatus {
@@ -46,8 +47,8 @@ model Credential {
   id             String       @id @default(cuid())
   createdAt      DateTime     @default(now())
   secretHash     String       @unique
-  lastUsed       DateTime?
   name           String
+  lastUsed       DateTime?
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   organizationId String
 
@@ -58,13 +59,14 @@ model Invitation {
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
   tokenHash       String           @unique
-  email           String           @unique
+  email           String
   organization    Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   organizationId  String
   invitedByUser   User?            @relation(fields: [invitedByUserId], references: [id], onDelete: SetNull)
   invitedByUserId String?
   status          InvitationStatus @default(PENDING)
 
+  @@id(name: "invitationId", [organizationId, email])
   @@index([organizationId])
 }
 
@@ -156,19 +158,30 @@ model Ticket {
   organizationId     String
   comments           Comment[]
   attachments        Attachment[]
-  referencedTicketId String?
-  referencedTicket   Ticket?      @relation("ReferencedTickets", fields: [referencedTicketId], references: [id], onDelete: SetNull, onUpdate: SetNull)
-  referencedTickets  Ticket[]     @relation("ReferencedTickets")
+  referencedTickets  Ticket[]     @relation("TicketReferences")
+  referencingTickets Ticket[]     @relation("TicketReferences")
 
   @@index([userId])
   @@index([organizationId])
-  @@index([referencedTicketId])
 }
 
-enum TicketStatus {
-  OPEN
-  IN_PROGRESS
-  DONE
+model Attachment {
+  id   String @id @default(cuid())
+  name String
+
+  entity    AttachmentEntity
+  ticket    Ticket?          @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  ticketId  String?
+  comment   Comment?         @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  commentId String?
+
+  @@index([ticketId])
+  @@index([commentId])
+}
+
+enum AttachmentEntity {
+  TICKET
+  COMMENT
 }
 
 model Comment {
@@ -185,20 +198,8 @@ model Comment {
   @@index([userId])
 }
 
-model Attachment {
-  id   String @id @default(cuid())
-  name String
-
-  entity    AttachmentEntity
-  ticket    Ticket?          @relation(fields: [ticketId], references: [id], onDelete: Cascade)
-  ticketId  String?
-  comment   Comment?         @relation(fields: [commentId], references: [id], onDelete: Cascade)
-  commentId String?
-
-  @@index([ticketId])
-}
-
-enum AttachmentEntity {
-  TICKET
-  COMMENT
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  DONE
 }

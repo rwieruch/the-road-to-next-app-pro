@@ -1,4 +1,3 @@
-// import "dotenv/config";
 import { prisma } from "../prisma";
 import { stripe } from "./";
 

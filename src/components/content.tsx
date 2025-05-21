@@ -1,9 +1,9 @@
 import Linkify from "linkify-react";
+import { IntermediateRepresentation } from "linkifyjs";
 import Link from "next/link";
 import { getBaseUrl } from "@/utils/url";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const renderLink = ({ attributes, content }: any) => {
+const renderLink = ({ attributes, content }: IntermediateRepresentation) => {
   const { href, ...props } = attributes;
 
   const isInternal = href.includes(getBaseUrl());
@@ -16,15 +16,16 @@ const renderLink = ({ attributes, content }: any) => {
     }
   };
 
-  let maybeParsedConent = content;
+  let maybeParsedContent = content;
   if (url.startsWith("/tickets/")) {
-    maybeParsedConent = url.replace("/tickets/", "Ticket: #");
+    maybeParsedContent = url.replace("/tickets/", "Ticket: #");
   }
+
   // add other feature paths if needed
 
   return (
     <Link href={url} {...props} onClick={handleClick} className="underline">
-      {maybeParsedConent}
+      {maybeParsedContent}
     </Link>
   );
 };

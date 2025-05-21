@@ -35,7 +35,10 @@ const InvitationList = async ({ organizationId }: InvitationListProps) => {
       <TableBody>
         {invitations.map((invitation) => {
           const deleteButton = (
-            <InvitationDeleteButton email={invitation.email} />
+            <InvitationDeleteButton
+              email={invitation.email}
+              organizationId={invitation.organizationId}
+            />
           );
 
           const buttons = <>{deleteButton}</>;

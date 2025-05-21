@@ -1,15 +1,26 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { toActionState } from "@/components/form/utils/to-action-state";
 import { getAdminOrRedirect } from "@/features/membership/queries/get-admin-or-redirect";
 import { prisma } from "@/lib/prisma";
-import { invitationsPath } from "@/paths";
 
-export const deleteInvitation = async (email: string) => {
+type DeleteInvitation = {
+  email: string;
+  organizationId: string;
+};
+
+export const deleteInvitation = async ({
+  email,
+  organizationId,
+}: DeleteInvitation) => {
+  await getAdminOrRedirect(organizationId);
+
   const invitation = await prisma.invitation.findUnique({
     where: {
-      email,
+      invitationId: {
+        email,
+        organizationId,
+      },
     },
   });
 
@@ -17,15 +28,14 @@ export const deleteInvitation = async (email: string) => {
     return toActionState("ERROR", "Invitation not found");
   }
 
-  await getAdminOrRedirect(invitation.organizationId);
-
   await prisma.invitation.delete({
     where: {
-      email,
+      invitationId: {
+        email,
+        organizationId,
+      },
     },
   });
-
-  revalidatePath(invitationsPath(invitation.organizationId));
 
   return toActionState("SUCCESS", "Invitation deleted");
 };

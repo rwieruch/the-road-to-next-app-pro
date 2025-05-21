@@ -1,4 +1,5 @@
 import { useTransition } from "react";
+import { PaginatedData } from "@/types/pagination";
 import { Button } from "../ui/button";
 import {
   Select,
@@ -8,7 +9,6 @@ import {
   SelectValue,
 } from "../ui/select";
 import { PAGE_SIZES } from "./constants";
-import { PaginatedData } from "./types";
 
 type PageAndSize = {
   page: number;
@@ -32,8 +32,12 @@ const Pagination = ({
 
   const label = `${startOffset}-${actualEndOffset} of ${count}`;
 
+  const [isPending, startTransition] = useTransition();
+
   const handlePreviousPage = () => {
-    onPagination({ ...pagination, page: pagination.page - 1 });
+    startTransition(() => {
+      onPagination({ ...pagination, page: pagination.page - 1 });
+    });
   };
 
   const [isPending, startTransition] = useTransition();

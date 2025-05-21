@@ -7,14 +7,14 @@ import {
   fromErrorToActionState,
   toActionState,
 } from "@/components/form/utils/to-action-state";
-import { AttachmentSubjectDTO } from "@/features/attachment/dto/attachment-subject-dto";
-import { filesSchema } from "@/features/attachment/schema/files";
-import * as attachmentService from "@/features/attachment/service";
+import * as attachmentSubjectDTO from "@/features/attachments/dto/attachment-subject-dto";
+import { filesSchema } from "@/features/attachments/schema/files";
+import * as attachmentService from "@/features/attachments/service";
 import { getAuthOrRedirect } from "@/features/auth/queries/get-auth-or-redirect";
-import * as commentData from "@/features/comment/data";
 import * as ticketData from "@/features/ticket/data";
 import { ticketPath } from "@/paths";
-import { findTicketIdsFromText } from "@/utils/find-ids-from-text";
+import { findIdsFromText } from "@/utils/find-ids-from-text";
+import * as commentData from "../data";
 
 const createCommentSchema = z.object({
   content: z.string().min(1).max(1024),
@@ -40,9 +40,13 @@ export const createComment = async (
       userId: user.id,
       ticketId,
       content,
+      options: {
+        includeUser: true,
+        includeTicket: true,
+      },
     });
 
-    const subject = AttachmentSubjectDTO.fromComment(comment, user.id);
+    const subject = attachmentSubjectDTO.fromComment(comment);
 
     if (!subject) {
       return toActionState("ERROR", "Comment not created");
@@ -57,7 +61,7 @@ export const createComment = async (
 
     await ticketData.connectReferencedTickets(
       ticketId,
-      findTicketIdsFromText("tickets", content)
+      findIdsFromText("tickets", content)
     );
   } catch (error) {
     return fromErrorToActionState(error);

@@ -67,8 +67,10 @@ export const createOrganization = async (
 
   await setCookieByKey(
     "toast",
-    `<a href=${membershipsPath(organization.id)}>Organization</a> created`
+    JSON.stringify({
+      message: "Organization created",
+      link: membershipsPath(organization.id),
+    })
   );
-
   redirect(ticketsPath());
 };

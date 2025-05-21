@@ -21,14 +21,14 @@ const CheckoutSessionForm = ({
   activePriceId,
   children,
 }: CheckoutSessionFormProps) => {
-  const isActivePrice = activePriceId === priceId;
-
   const [actionState, action] = useActionState(
     !activePriceId
       ? createCheckoutSession.bind(null, organizationId, priceId)
       : createCustomerPortal.bind(null, organizationId),
     EMPTY_ACTION_STATE
   );
+
+  const isActivePrice = activePriceId === priceId;
 
   return (
     <Form action={action} actionState={actionState}>

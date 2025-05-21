@@ -35,7 +35,7 @@ export const signIn = async (_actionState: ActionState, formData: FormData) => {
     );
 
     if (!user || !validPassword) {
-      return toActionState("ERROR", "Incorrect email or password");
+      return toActionState("ERROR", "Incorrect email or password", formData);
     }
 
     const sessionToken = generateRandomToken();

@@ -1,5 +1,5 @@
-import { AttachmentDeleteButton } from "@/features/attachment/components/attachment-delete-button";
-import { AttachmentList } from "@/features/attachment/components/attachment-list";
+import { AttachmentDeleteButton } from "@/features/attachments/components/attachment-delete-button";
+import { AttachmentList } from "@/features/attachments/components/attachment-list";
 import { CommentWithMetadata } from "../types";
 import { CommentDeleteButton } from "./comment-delete-button";
 import { CommentItem } from "./comment-item";
@@ -7,8 +7,7 @@ import { CommentItem } from "./comment-item";
 type CommentListProps = {
   comments: CommentWithMetadata[];
   onDeleteComment: (id: string) => void;
-  onCreateAttachment?: () => void;
-  onDeleteAttachment?: (commentId: string, attachmentId: string) => void;
+  onDeleteAttachment?: (id: string) => void;
 };
 
 const CommentList = ({
@@ -31,7 +30,7 @@ const CommentList = ({
 
         const sections = [];
 
-        if (comment.attachments?.length) {
+        if (comment.attachments.length) {
           sections.push({
             label: "Attachments",
             content: (
@@ -43,9 +42,7 @@ const CommentList = ({
                         <AttachmentDeleteButton
                           key="0"
                           id={attachmentId}
-                          onDeleteAttachment={(attachmentId) =>
-                            onDeleteAttachment?.(comment.id, attachmentId)
-                          }
+                          onDeleteAttachment={onDeleteAttachment}
                         />,
                       ]
                     : []),

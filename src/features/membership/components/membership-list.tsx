@@ -11,7 +11,7 @@ import {
 import { getMemberships } from "../queries/get-memberships";
 import { MembershipDeleteButton } from "./membership-delete-button";
 import { MembershipMoreMenu } from "./membership-more-menu";
-import { PermissionToggleDropdown } from "./permission-toggle-dropdown";
+import { PermissionToggle } from "./permission-toggle";
 
 type MembershipListProps = {
   organizationId: string;
@@ -73,7 +73,7 @@ const MembershipList = async ({ organizationId }: MembershipListProps) => {
               </TableCell>
               <TableCell>{membership.membershipRole}</TableCell>
               <TableCell>
-                <PermissionToggleDropdown
+                <PermissionToggle
                   userId={membership.userId}
                   organizationId={membership.organizationId}
                   permissionKey="canDeleteTicket"
