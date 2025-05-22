@@ -40,8 +40,6 @@ const Pagination = ({
     });
   };
 
-  const [isPending, startTransition] = useTransition();
-
   const handleNextPage = () => {
     startTransition(() => {
       onPagination({ ...pagination, page: pagination.page + 1 });
